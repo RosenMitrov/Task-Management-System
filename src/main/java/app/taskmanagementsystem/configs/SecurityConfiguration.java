@@ -19,7 +19,6 @@ import static app.taskmanagementsystem.domain.entity.enums.RoleTypeEnum.USER;
 @EnableWebSecurity
 public class SecurityConfiguration {
 
-
     private static final String[] ANONYMOUS_ENDPOINTS = {
             "/",
             "/users/login",
@@ -29,17 +28,18 @@ public class SecurityConfiguration {
             "/test-session"
     };
     private static final String[] ROLE_ADMIN_ENDPOINTS = {
-            "/admin/**"
-//            "/admin/all-users",
-//            "/admin/user-details/**",
-//            "/admin/user-edit/**",
-//            "/admin/all-departments",
-//            "/admin/department-details/**",
-//            "/admin/user-delete/**"
+            "/admin/**",
+            "/admin/all-users",
+            "/admin/user-details/**",
+            "/admin/user-edit/**",
+            "/admin/all-departments",
+            "/admin/department-details/**",
+            "/admin/user-delete/**"
     };
 
     private static final String[] ROLE_USER_ENDPOINTS = {
-            "/users/**"
+            "/users/**",
+            "/users/add-task"
     };
 
 
@@ -54,7 +54,7 @@ public class SecurityConfiguration {
 
                 .requestMatchers(ROLE_ADMIN_ENDPOINTS).hasRole(ADMIN.name())
 
-                .requestMatchers(ROLE_USER_ENDPOINTS).permitAll()
+                .requestMatchers(ROLE_USER_ENDPOINTS).hasRole(USER.name())
 
                 .anyRequest()
                 .authenticated()

@@ -37,7 +37,8 @@ public class ApplicationUserDetailsService implements UserDetailsService {
                 userEntity.getEmail(),
                 userEntity.getPassword(),
                 extractAuthorities(userEntity),
-                userEntity.getFirstName() + " " + userEntity.getLastName()
+                userEntity.getFirstName() + " " + userEntity.getLastName(),
+                userEntity.getUsername()
         );
     }
 
