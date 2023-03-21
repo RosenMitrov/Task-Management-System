@@ -34,6 +34,7 @@
                         class="form-control rounded-3 mycol-config my-input"
                         type="text"
                         id="title"
+                        name="title"
                         th:field="*{title}"
                         th:errorclass="is-invalid"
                 >
@@ -44,7 +45,7 @@
 
         </div>
         <div class="col-12 mycol-config mt-3">
-            <button class="btn btn-admin-toast">Create Post</button>
+            <button type="submit" class="btn btn-admin-toast">Create Post</button>
         </div>
 
     </div>
