@@ -24,8 +24,7 @@
 
     <div class="container">
       <ul class="list-group list-group-flush" th:each="comment : ${allCommentsByPostId}">
-        <small th:text="|From: ${comment.creatorName} Date: ${comment.createdDate}|" class="list-group-item">
-          <strong>From:</strong>
+        <small th:text="|From: ${comment.creatorName} Date: ${#temporals.format(comment.createdDate, 'dd-MM-yyyy HH:mm:ss')}|" class="list-group-item">
         </small>
         <li class="list-group-item" th:text="${comment.message}">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore pariatur
