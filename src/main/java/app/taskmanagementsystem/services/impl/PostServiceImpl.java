@@ -73,7 +73,7 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional
     public List<PostDetailsViewDto> findAllPostsByTaskId(Long taskId) {
-        Optional<PostEntity> allPostsByTaskId = this.postRepository.findById(taskId);
+        List<PostEntity> allPostsByTaskId = this.postRepository.findAllByTask_Id(taskId);
         return allPostsByTaskId
                 .stream()
                 .map(this::fromPostEntityToPostDetailsView)

@@ -140,7 +140,6 @@ public class TaskServiceImpl implements TaskService, DbInit {
                 .setCreatorName(creatorUsername)
                 .setStartDate(LocalDateTime.now());
         this.taskRepository.saveAndFlush(taskTobeSaved);
-
     }
 
     @Override
