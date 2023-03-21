@@ -45,7 +45,7 @@
             </div>
             <div>
                 <a th:href="@{/users/tasks/all}" class="btn btn-admin-neutral mt-3">Go Back</a>
-                <a th:href="@{/users/posts/create-new-post-to-task/{taskId}(taskId=${post.task.id})}" class="btn btn-admin-update mt-3">Add Post</a>
+                <a th:href="@{/users/posts/create-new-post-to-task/{taskId}(taskId=${taskId})}" class="btn btn-admin-update mt-3">Add Post</a>
             </div>
         </div>
 

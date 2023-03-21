@@ -1,17 +1,12 @@
 package app.taskmanagementsystem.domain.dto.model;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public class PostAddDto {
 
-    @NotBlank
     @Size(min = 3)
     private String title;
-
     private Long taskId;
-
     public PostAddDto() {
     }
 

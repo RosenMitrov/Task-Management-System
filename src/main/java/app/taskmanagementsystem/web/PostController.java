@@ -43,9 +43,8 @@ public class PostController {
 
     @GetMapping("/create-new-post-to-task/{taskId}")
     public String getCreationPage(@PathVariable("taskId") Long taskId,
-                                  Model model,
-                                  PostAddDto postAddDto) {
-
+                                  Model model) {
+        System.out.println();
         if (!model.containsAttribute("postAddDto")) {
             model.addAttribute("postAddDto", new PostAddDto().setTaskId(taskId));
         }
@@ -57,17 +56,18 @@ public class PostController {
     public String createNewPost(@Valid PostAddDto postAddDto,
                                 BindingResult bindingResult,
                                 RedirectAttributes redirectAttributes,
-                                @AuthenticationPrincipal
-                                AppUserDetails appUserDetails) {
+                                @AuthenticationPrincipal AppUserDetails appUserDetails) {
 
 
         if (bindingResult.hasErrors()) {
-
             redirectAttributes.addFlashAttribute("postAddDto", postAddDto);
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.postAddDto", bindingResult);
             return "redirect:/users/posts/create-new-post-to-task/" + postAddDto.getTaskId();
         }
-        return "redirect:/";
+        if (appUserDetails != null) {
+            this.postService.createNewPost(postAddDto, appUserDetails.getNickname());
+        }
+        return "redirect:/users/tasks/all";
     }
 
 

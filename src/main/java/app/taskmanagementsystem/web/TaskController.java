@@ -72,7 +72,7 @@ public class TaskController {
             return "redirect:/users/tasks/add-task";
         }
 
-        this.taskService.createTask(taskAddDto, appUserDetails.getUsername());
+        this.taskService.createTask(taskAddDto, appUserDetails.getNickname());
 
         return "redirect:/users/tasks/all";
     }

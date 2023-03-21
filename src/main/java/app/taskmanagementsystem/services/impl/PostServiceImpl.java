@@ -1,7 +1,9 @@
 package app.taskmanagementsystem.services.impl;
 
+import app.taskmanagementsystem.domain.dto.model.PostAddDto;
 import app.taskmanagementsystem.domain.dto.view.PostDetailsViewDto;
 import app.taskmanagementsystem.domain.entity.PostEntity;
+import app.taskmanagementsystem.domain.entity.TaskEntity;
 import app.taskmanagementsystem.repositories.PostRepository;
 import app.taskmanagementsystem.services.PostService;
 import app.taskmanagementsystem.services.TaskService;
@@ -76,6 +78,20 @@ public class PostServiceImpl implements PostService {
                 .stream()
                 .map(this::fromPostEntityToPostDetailsView)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void createNewPost(PostAddDto postAddDto,
+                              String username) {
+        TaskEntity taskEntityById = this.taskService.getTaskEntityById(postAddDto.getTaskId());
+
+        PostEntity newPostEntity = new PostEntity()
+                .setTitle(postAddDto.getTitle())
+                .setTask(taskEntityById)
+                .setCreatorName(username)
+                .setCreatedDate(LocalDateTime.now());
+
+        this.postRepository.saveAndFlush(newPostEntity);
     }
 
     private PostDetailsViewDto fromPostEntityToPostDetailsView(PostEntity postEntity) {
