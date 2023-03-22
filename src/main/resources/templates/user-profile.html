@@ -16,32 +16,42 @@
 </header>
 
 <main class="position-absolute top-50 start-50 translate-middle">
-    <div class="container-fluid profile-background p-5 rounded-5">
-        <h2 class="text-center">PROFILE:</h2>
+    <div
+            class="container-fluid profile-background p-5 rounded-5"
+         th:object="${userProfile}">
+        <h2 class="text-center" th:text="|Profile ID: ${userProfile.id}|">PROFILE ID: 1</h2>
         <hr>
-        <div class="d-flex mt-2 gap-5">
+        <div class="d-flex mt-2 gap-5" >
             <img class="img-my" src="/images/profile-picture.png" alt="profile-picture">
             <div class="row">
                 <table >
                     <tr>
                         <th class="th-config">First name:</th>
-                        <td>Rosen</td>
+                        <td th:text="*{firstName}">Rosen</td>
                     </tr>
                     <tr>
                         <th class="th-config">Last name:</th>
-                        <td>Mitrov</td>
+                        <td th:text="*{lastName}">Mitrov</td>
                     </tr>
                     <tr>
                         <th class="th-config">Email:</th>
-                        <td>test@emai.bg</td>
+                        <td th:text="*{email}">test@emai.bg</td>
                     </tr>
                     <tr>
                         <th class="th-config">Age:</th>
-                        <td>33</td>
+                        <td th:text="*{age}">33</td>
                     </tr>
                     <tr>
                         <th class="th-config">Department:</th>
-                        <td>BACK_END_DEVELOPMENT_TEAM</td>
+                        <td th:text="*{department}">BACK_END_DEVELOPMENT_TEAM</td>
+                    </tr>
+                    <tr>
+                        <th class="th-config">Created on:</th>
+                        <td th:text="*{#temporals.format(createdOn, 'dd-MM-yyyy HH:mm:ss')}">2023-01-12</td>
+                    </tr>
+                    <tr>
+                        <th class="th-config">Status:</th>
+                        <td th:text="(*{enabled}==${true} ? 'ACTIVE' : 'INACTIVE')">2023-01-12</td>
                     </tr>
                 </table>
             </div>

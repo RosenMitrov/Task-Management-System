@@ -33,4 +33,6 @@ public interface UserService {
 
 
     List<UserBasicRestViewDto> findAllUsersRestViewsRoleId(Long roleId);
+
+    UserDetailsViewDto getUserViewProfileByEmail(String email);
 }

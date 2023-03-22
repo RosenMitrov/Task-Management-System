@@ -15,7 +15,6 @@ public class UserDetailsViewDto {
     private boolean isEnabled;
     private int age;
     private LocalDateTime createdOn;
-//    private DepartmentAdminViewDto department;
     private DepartmentTypeEnum department;
     private List<UserRoleViewDto> roles;
     private String showRoles;

@@ -199,11 +199,17 @@ public class UserServiceImpl implements UserService, DbInit {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    @Transactional
+    public UserDetailsViewDto getUserViewProfileByEmail(String email) {
+        UserEntity userEntityByEmail = getUserEntityByEmail(email);
+        return mapEntityToDetailsView(userEntityByEmail);
+    }
+
     private UserBasicRestViewDto fromUserEntityToRestView(UserEntity userEntity) {
         return this.modelMapper.map(userEntity, UserBasicRestViewDto.class)
                 .setDepartment(userEntity.getDepartment().getDepartmentName().name());
     }
-
 
     private UserDetailsViewDto mapEntityToDetailsView(UserEntity userEntity) {
         return this.modelMapper
