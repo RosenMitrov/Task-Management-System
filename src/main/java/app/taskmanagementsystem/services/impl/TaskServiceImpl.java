@@ -22,8 +22,7 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-import static app.taskmanagementsystem.domain.entity.enums.ProgressTypeEnum.IN_PROGRESS;
-import static app.taskmanagementsystem.domain.entity.enums.ProgressTypeEnum.OPEN;
+import static app.taskmanagementsystem.domain.entity.enums.ProgressTypeEnum.*;
 
 @Service
 public class TaskServiceImpl implements TaskService, DbInit {
@@ -110,13 +109,26 @@ public class TaskServiceImpl implements TaskService, DbInit {
 
     @Override
     @Transactional
-    public List<TaskDetailsViewDto> getAllTasksDetailsViews() {
+    public List<TaskDetailsViewDto> getAllTasksDetailsViews(String sessionUserEmail) {
         List<TaskEntity> allTaskEntities = this.taskRepository.findAll();
 
-        return allTaskEntities
+
+        List<TaskDetailsViewDto> allTasks = allTaskEntities
                 .stream()
-                .map(this::fromTaskEntityToDetailsView)
+                .map(taskEntity -> fromTaskEntityToDetailsView(taskEntity, sessionUserEmail))
                 .collect(Collectors.toList());
+
+
+        return allTasks;
+    }
+
+    private TaskDetailsViewDto fromTaskEntityToDetailsView(TaskEntity taskEntity,
+                                                           String sessionUserEmail) {
+        TaskDetailsViewDto mapped = fromTaskEntityToDetailsView(taskEntity);
+        return mapped.setAssignedUserInSession(mapped
+                .getAssignedUsers()
+                .stream()
+                .anyMatch(userBasicViewDto -> userBasicViewDto.getEmail().equals(sessionUserEmail)));
     }
 
     @Override
@@ -154,9 +166,29 @@ public class TaskServiceImpl implements TaskService, DbInit {
         if (taskEntity.getProgress().getProgress() == OPEN) {
             taskEntity.setProgress(this.progressService.getProgressEntityByType(IN_PROGRESS));
         }
+        if (taskEntity.getProgress().getProgress() == COMPLETED) {
+            taskEntity.setProgress(this.progressService.getProgressEntityByType(RE_OPEN));
+        }
         UserEntity userToBeAddedToTask = this.userService.getUserEntityByEmail(email);
         taskEntity.addUserToTask(userToBeAddedToTask);
 
+        this.taskRepository.saveAndFlush(taskEntity);
+    }
+
+    @Override
+    @Transactional
+    public void removeUserFromTaskById(Long taskId,
+                                       String email) {
+        Optional<TaskEntity> optionalTask = this.taskRepository.findById(taskId);
+        if (optionalTask.isEmpty()) {
+            return;
+        }
+        TaskEntity taskEntity = optionalTask.get();
+        UserEntity userToBeDetached = this.userService.getUserEntityByEmail(email);
+        taskEntity.removeUserFromTask(userToBeDetached);
+        if (taskEntity.getCountOfAssignedUsers() == 0) {
+            taskEntity.setProgress(this.progressService.getProgressEntityByType(COMPLETED));
+        }
         this.taskRepository.saveAndFlush(taskEntity);
     }
 

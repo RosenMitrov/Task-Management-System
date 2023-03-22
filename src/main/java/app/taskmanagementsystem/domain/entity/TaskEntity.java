@@ -138,4 +138,12 @@ public class TaskEntity extends BaseEntity {
         }
         this.assignedUsers.add(user);
     }
+
+    public void removeUserFromTask(UserEntity userToBeDetached) {
+        this.assignedUsers.remove(userToBeDetached);
+    }
+
+    public int getCountOfAssignedUsers() {
+        return this.assignedUsers.size();
+    }
 }

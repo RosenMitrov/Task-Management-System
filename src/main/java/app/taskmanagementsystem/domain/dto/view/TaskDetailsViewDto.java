@@ -13,6 +13,7 @@ public class TaskDetailsViewDto {
     private ClassificationBasicView classification;
     private ProgressBasicView progress;
     private List<UserBasicViewDto> assignedUsers;
+    private boolean isAssignedUserInSession;
 
     public TaskDetailsViewDto() {
     }
@@ -98,4 +99,12 @@ public class TaskDetailsViewDto {
         return this;
     }
 
+    public boolean isAssignedUserInSession() {
+        return isAssignedUserInSession;
+    }
+
+    public TaskDetailsViewDto setAssignedUserInSession(boolean assignedUserInSession) {
+        isAssignedUserInSession = assignedUserInSession;
+        return this;
+    }
 }

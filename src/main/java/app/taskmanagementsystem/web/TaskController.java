@@ -21,16 +21,20 @@ import java.util.List;
 public class TaskController {
 
     private final TaskService taskService;
+    private final UserService userService;
 
     @Autowired
-    public TaskController(TaskService taskService) {
+    public TaskController(TaskService taskService,
+                          UserService userService) {
         this.taskService = taskService;
 
+        this.userService = userService;
     }
 
     @GetMapping("/all")
-    public String getTasks(Model model) {
-        List<TaskDetailsViewDto> allTasksDetailsViews = this.taskService.getAllTasksDetailsViews();
+    public String getTasks(@AuthenticationPrincipal AppUserDetails appUserDetails,
+                           Model model) {
+        List<TaskDetailsViewDto> allTasksDetailsViews = this.taskService.getAllTasksDetailsViews(appUserDetails.getUsername());
         model.addAttribute("allTasksDetailsViews", allTasksDetailsViews);
         return "tasks-all";
     }
@@ -38,9 +42,14 @@ public class TaskController {
     @PatchMapping("/map-task/{taskId}")
     public String getTaskById(@PathVariable("taskId") Long taskId,
                               @AuthenticationPrincipal AppUserDetails appUserDetails) {
-
         this.taskService.assignUserToTask(taskId, appUserDetails.getUsername());
+        return "redirect:/users/tasks/all";
+    }
 
+    @PatchMapping("/detach-user-from-task/{taskId}")
+    public String declineTaskById(@PathVariable("taskId") Long taskId,
+                              @AuthenticationPrincipal AppUserDetails appUserDetails) {
+        this.taskService.removeUserFromTaskById(taskId, appUserDetails.getUsername());
         return "redirect:/users/tasks/all";
     }
 

@@ -45,15 +45,27 @@
             </td>
             <td th:text="*{classification.classification.name()}">BUG</td>
             <td th:text="*{progress.progress.name()}">OPEN</td>
-            <td >
-                <form
-                        th:action="@{/users/tasks/map-task/{taskId}(taskId=*{id})}"
-                        th:method="PATCH">
-                    <button
-                            type="submit" class="btn btn-admin-details">
-                        WORK
-                    </button>
-                </form>
+            <td>
+                <th:block th:if="*{assignedUserInSession}">
+                    <form
+                            th:action="@{/users/tasks/detach-user-from-task/{taskId}(taskId=*{id})}"
+                            th:method="PATCH">
+                        <button
+                                type="submit" class="btn btn-admin-delete">
+                            FINISH
+                        </button>
+                    </form>
+                </th:block>
+                <th:block th:unless="*{assignedUserInSession}">
+                    <form
+                            th:action="@{/users/tasks/map-task/{taskId}(taskId=*{id})}"
+                            th:method="PATCH">
+                        <button
+                                type="submit" class="btn btn-admin-details">
+                            TAKE
+                        </button>
+                    </form>
+                </th:block>
             </td>
             <td>
                 <small th:if="*{assignedUsers.size() == 0}">NO USERS</small>

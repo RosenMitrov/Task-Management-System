@@ -11,7 +11,7 @@ public interface TaskService {
 
     TaskEntity getTaskEntityById(long taskId);
 
-    List<TaskDetailsViewDto> getAllTasksDetailsViews();
+    List<TaskDetailsViewDto> getAllTasksDetailsViews(String sessionUserEmail);
 
     TaskDetailsViewDto getTaskDetailsViewById(Long taskId);
 
@@ -20,4 +20,7 @@ public interface TaskService {
 
     void assignUserToTask(Long taskId,
                           String email);
+
+    void removeUserFromTaskById(Long taskId,
+                                String email);
 }
