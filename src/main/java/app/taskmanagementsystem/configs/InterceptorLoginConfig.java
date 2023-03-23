@@ -18,8 +18,7 @@ public class InterceptorLoginConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-
-        registry.addInterceptor(new ExpiredCredentialsInterceptor(credentialService)).addPathPatterns("/");
+        registry.addInterceptor(new ExpiredCredentialsInterceptor(credentialService)).addPathPatterns("/home");
         WebMvcConfigurer.super.addInterceptors(registry);
     }
 }

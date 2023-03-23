@@ -31,7 +31,4 @@ public class ExpiredCredentialsInterceptor implements HandlerInterceptor {
         }
         return HandlerInterceptor.super.preHandle(request, response, handler);
     }
-
-
-
 }

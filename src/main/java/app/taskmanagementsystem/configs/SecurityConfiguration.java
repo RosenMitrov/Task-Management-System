@@ -1,6 +1,7 @@
 package app.taskmanagementsystem.configs;
 
 import app.taskmanagementsystem.repositories.UserRepository;
+import app.taskmanagementsystem.services.CredentialService;
 import app.taskmanagementsystem.services.security.ApplicationUserDetailsService;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -24,8 +25,7 @@ public class SecurityConfiguration {
             "/users/login",
             "/users/register",
             "/users/login-error",
-            "/error",
-            "/test-session"
+            "/error"
     };
     private static final String[] ROLE_ADMIN_ENDPOINTS = {
             "/admin/**",
@@ -64,9 +64,8 @@ public class SecurityConfiguration {
                 .loginPage("/users/login")
                 .usernameParameter("email")
                 .passwordParameter("password")
-                .defaultSuccessUrl("/")
+                .defaultSuccessUrl("/home")
                 .failureForwardUrl("/users/login-error")
-
 
                 .and()
                 .logout()

@@ -26,12 +26,10 @@ public class CredentialServiceImpl implements CredentialService {
     @Override
     public boolean isCredentialsExpired(String email) {
         UserEntity userEntityByEmail = this.userService.getUserEntityByEmail(email);
-        LocalDateTime lastChanges = userEntityByEmail.getLastPasswordChangeDate();
-        LocalDateTime oneMinutesAgo = LocalDateTime.now().minusMinutes(1);
-        if (oneMinutesAgo.isAfter(lastChanges)) {
-            return true;
-        }
-        return false;
+        LocalDateTime lastPasswordChangeDate = userEntityByEmail.getLastPasswordChangeDate();
+//        LocalDateTime oneMinutesAgo = LocalDateTime.now().minusMinutes(1);
+        LocalDateTime sevenDaysAgo = LocalDateTime.now().minusDays(7);
+        return sevenDaysAgo.isAfter(lastPasswordChangeDate);
     }
 
     @Override
@@ -42,9 +40,7 @@ public class CredentialServiceImpl implements CredentialService {
     @Override
     public boolean checkIfPasswordMatchToLastOne(UserChangePasswordDto userChangePasswordDto) {
         UserEntity userEntityByEmail = this.userService.getUserEntityByEmail(userChangePasswordDto.getEmail());
-        boolean matches = this.passwordEncoder.matches(userChangePasswordDto.getNewPassword(), userEntityByEmail.getPassword());
-        return matches;
-
+        return this.passwordEncoder.matches(userChangePasswordDto.getNewPassword(), userEntityByEmail.getPassword());
     }
 
     @Override

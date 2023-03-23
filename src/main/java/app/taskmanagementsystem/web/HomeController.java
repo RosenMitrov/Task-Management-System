@@ -9,11 +9,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class HomeController {
 
-    @GetMapping("/")
+    @GetMapping({"/", "/home"})
     public String home(@AuthenticationPrincipal
                        AppUserDetails appUserDetails,
                        Model model) {
-
         if (appUserDetails != null) {
             model.addAttribute("username", appUserDetails.getFullName());
         }
