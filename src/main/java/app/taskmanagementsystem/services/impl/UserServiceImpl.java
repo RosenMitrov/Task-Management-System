@@ -74,6 +74,7 @@ public class UserServiceImpl implements UserService, DbInit {
 
         userEntityToBeSaved
                 .setCreatedOn(LocalDateTime.now())
+                .setLastPasswordChangeDate(LocalDateTime.now())
                 .setPassword(this.passwordEncoder.encode(userRegisterDto.getPassword()))
                 .setEnabled(true)
                 .setDepartment(departmentByTypeEnum)
@@ -206,6 +207,11 @@ public class UserServiceImpl implements UserService, DbInit {
         return mapEntityToDetailsView(userEntityByEmail);
     }
 
+    @Override
+    public void updatePassword(UserEntity userEntity) {
+        this.userRepository.saveAndFlush(userEntity);
+    }
+
     private UserBasicRestViewDto fromUserEntityToRestView(UserEntity userEntity) {
         return this.modelMapper.map(userEntity, UserBasicRestViewDto.class)
                 .setDepartment(userEntity.getDepartment().getDepartmentName().name());
@@ -241,6 +247,7 @@ public class UserServiceImpl implements UserService, DbInit {
                         .setAge(33)
                         .setEnabled(true)
                         .setCreatedOn(LocalDateTime.now())
+                        .setLastPasswordChangeDate(LocalDateTime.now())
                         .setDepartment(backEndDepartment)
                         .setRoles(this.userRoleService.getAdminRoles())
                         .setPassword(this.passwordEncoder.encode("123")),
@@ -252,6 +259,7 @@ public class UserServiceImpl implements UserService, DbInit {
                         .setAge(22)
                         .setEnabled(true)
                         .setCreatedOn(LocalDateTime.now())
+                        .setLastPasswordChangeDate(LocalDateTime.now())
                         .setDepartment(frontEndDepartment)
                         .setRoles(this.userRoleService.getModeratorRoles())
                         .setPassword(this.passwordEncoder.encode("123")),
@@ -263,6 +271,7 @@ public class UserServiceImpl implements UserService, DbInit {
                         .setAge(18)
                         .setEnabled(true)
                         .setCreatedOn(LocalDateTime.now())
+                        .setLastPasswordChangeDate(LocalDateTime.now())
                         .setDepartment(testDevelopmentDepartment)
                         .setRoles(this.userRoleService.getUserRoles())
                         .setPassword(this.passwordEncoder.encode("123"))

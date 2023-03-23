@@ -35,4 +35,6 @@ public interface UserService {
     List<UserBasicRestViewDto> findAllUsersRestViewsRoleId(Long roleId);
 
     UserDetailsViewDto getUserViewProfileByEmail(String email);
+
+    void updatePassword(UserEntity userEntityByEmail);
 }

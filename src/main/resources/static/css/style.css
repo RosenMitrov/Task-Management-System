@@ -415,3 +415,12 @@ input {
     max-width: 150px;
 }
 
+/*Change password*/
+.container-size {
+    width: 500px;
+    padding-bottom: 10px;
+}
+.header-size {
+    max-width: 400px;
+}
+

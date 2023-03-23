@@ -38,6 +38,8 @@ public class UserEntity extends BaseEntity {
     private List<UserRoleEntity> roles;
     @ManyToMany(mappedBy = "assignedUsers")
     private List<TaskEntity> tasks;
+    @Column(name = "last_pass_change_date")
+    private LocalDateTime lastPasswordChangeDate;
 
     public UserEntity() {
     }
@@ -138,6 +140,15 @@ public class UserEntity extends BaseEntity {
 
     public UserEntity setTasks(List<TaskEntity> tasks) {
         this.tasks = tasks;
+        return this;
+    }
+
+    public LocalDateTime getLastPasswordChangeDate() {
+        return lastPasswordChangeDate;
+    }
+
+    public UserEntity setLastPasswordChangeDate(LocalDateTime lastPasswordChangeDate) {
+        this.lastPasswordChangeDate = lastPasswordChangeDate;
         return this;
     }
 
