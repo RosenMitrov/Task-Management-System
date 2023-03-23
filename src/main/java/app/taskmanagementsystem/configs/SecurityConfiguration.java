@@ -72,7 +72,12 @@ public class SecurityConfiguration {
                 .logoutUrl("/users/logout")
                 .logoutSuccessUrl("/")
                 .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID");
+                .deleteCookies("JSESSIONID")
+
+                .and()
+                .rememberMe()
+                .key("uniqueKeyKasToBePlacedHere123456")
+                .tokenValiditySeconds(5 * 24 * 60 * 60);
 
         return httpSecurity
                 .build();
