@@ -34,14 +34,11 @@
                             id="email"
                             type="email"
                             name="email"
-                            th:value="*{email}"
+                            th:field="*{email}"
                             min="2"
                             max="20"
                             class="form-control-plaintext rounded px-2 input-color"
                             placeholder="mitrovrosen@gmail.com"/>
-<!--                    <p class="mt-1 ps-2 rounded-3 error-color-input">-->
-<!--                        <small>Email is required.</small>-->
-<!--                    </p>-->
                 </div>
             </div>
 
@@ -55,15 +52,18 @@
                             min="2"
                             max="20"
                             class="form-control-plaintext rounded px-2 input-color" placeholder="****************"/>
-
-<!--                    <p class="mt-1 ps-2 rounded-3 error-color-input">-->
-<!--                        <small>Password is required.</small>-->
-<!--                    </p>-->
                 </div>
             </div>
 
             <div class="mt-2">
-                <input type="checkbox" name="remember-me"> <span class="text-light">Remember me</span>
+                <input
+                        type="checkbox"
+                        id="remember-me"
+                        name="remember-me"
+                        th:field="*{rememberMe}">
+                <span class="text-light">
+                    Remember me
+                </span>
             </div>
 
             <div class="label-color-text text-center mb-4 mt-2">
