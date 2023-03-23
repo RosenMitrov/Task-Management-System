@@ -4,6 +4,7 @@ import app.taskmanagementsystem.domain.dto.model.PostAddDto;
 import app.taskmanagementsystem.domain.dto.view.PostDetailsViewDto;
 import app.taskmanagementsystem.domain.entity.PostEntity;
 import app.taskmanagementsystem.domain.entity.TaskEntity;
+import app.taskmanagementsystem.init.DbInit;
 import app.taskmanagementsystem.repositories.PostRepository;
 import app.taskmanagementsystem.services.PostService;
 import app.taskmanagementsystem.services.TaskService;
@@ -19,7 +20,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class PostServiceImpl implements PostService {
+public class PostServiceImpl implements PostService, DbInit {
     private final PostRepository postRepository;
     private final UserService userService;
     private final TaskService taskService;
@@ -37,7 +38,16 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public boolean isDbInit() {
+        return this.postRepository.count() > 0;
+    }
+
+    @Override
     public void postsInitialization() {
+        if (isDbInit()) {
+            return;
+        }
+        
         List<PostEntity> allPosts = List.of(
                 new PostEntity()
                         .setTitle("POST 1")
@@ -98,6 +108,4 @@ public class PostServiceImpl implements PostService {
         return this.modelMapper
                 .map(postEntity, PostDetailsViewDto.class);
     }
-
-
 }

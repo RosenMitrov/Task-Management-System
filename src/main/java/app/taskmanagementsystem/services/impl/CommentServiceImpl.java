@@ -3,6 +3,7 @@ package app.taskmanagementsystem.services.impl;
 import app.taskmanagementsystem.domain.dto.view.CommentDetailsViewDto;
 import app.taskmanagementsystem.domain.entity.CommentEntity;
 import app.taskmanagementsystem.domain.entity.UserEntity;
+import app.taskmanagementsystem.init.DbInit;
 import app.taskmanagementsystem.repositories.CommentRepository;
 import app.taskmanagementsystem.services.CommentService;
 import app.taskmanagementsystem.services.PostService;
@@ -16,7 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class CommentServiceImpl implements CommentService {
+public class CommentServiceImpl implements CommentService, DbInit {
 
     private final CommentRepository commentRepository;
     private final PostService postService;
@@ -35,7 +36,16 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    public boolean isDbInit() {
+        return this.commentRepository.count() > 0;
+    }
+
+    @Override
     public void commentsInitialization() {
+        if (isDbInit()) {
+            return;
+        }
+
         UserEntity adminEntityByEmail = this.userService.getUserEntityByEmail("admin@adminov.bg");
         UserEntity moderatorEntityByEmail = this.userService.getUserEntityByEmail("moderator@moderatorov.bg");
         UserEntity userEntityByEmail = this.userService.getUserEntityByEmail("user@userov.bg");
