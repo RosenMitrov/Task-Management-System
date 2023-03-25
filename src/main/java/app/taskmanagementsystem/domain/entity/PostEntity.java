@@ -16,8 +16,6 @@ public class PostEntity extends BaseEntity {
     private LocalDateTime createdDate;
     @Column(name = "creator_name", nullable = false)
     private String creatorName;
-    @OneToMany(mappedBy = "post", targetEntity = PictureEntity.class)
-    private List<PictureEntity> pictures;
     @OneToMany(mappedBy = "post", targetEntity = CommentEntity.class)
     private List<CommentEntity> comments;
 
@@ -54,16 +52,6 @@ public class PostEntity extends BaseEntity {
         this.creatorName = creatorName;
         return this;
     }
-
-    public List<PictureEntity> getPictures() {
-        return pictures;
-    }
-
-    public PostEntity setPictures(List<PictureEntity> pictures) {
-        this.pictures = pictures;
-        return this;
-    }
-
     public List<CommentEntity> getComments() {
         return comments;
     }
