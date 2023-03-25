@@ -27,9 +27,9 @@ public class CredentialServiceImpl implements CredentialService {
     public boolean isCredentialsExpired(String email) {
         UserEntity userEntityByEmail = this.userService.getUserEntityByEmail(email);
         LocalDateTime lastPasswordChangeDate = userEntityByEmail.getLastPasswordChangeDate();
-//        LocalDateTime oneMinutesAgo = LocalDateTime.now().minusMinutes(1);
-        LocalDateTime sevenDaysAgo = LocalDateTime.now().minusDays(7);
-        return sevenDaysAgo.isAfter(lastPasswordChangeDate);
+        LocalDateTime oneMinutesAgo = LocalDateTime.now().minusMinutes(1);
+//        LocalDateTime sevenDaysAgo = LocalDateTime.now().minusDays(7);
+        return oneMinutesAgo.isAfter(lastPasswordChangeDate);
     }
 
     @Override

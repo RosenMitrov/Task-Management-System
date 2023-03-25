@@ -3,6 +3,9 @@ package app.taskmanagementsystem.web;
 import app.taskmanagementsystem.domain.dto.model.UserChangePasswordDto;
 import app.taskmanagementsystem.security.AppUserDetails;
 import app.taskmanagementsystem.services.CredentialService;
+import app.taskmanagementsystem.utils.SessionManagementUtil;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -41,7 +44,8 @@ public class PasswordController {
     public String doChangePassword(@Valid UserChangePasswordDto userChangePasswordDto,
                                    BindingResult bindingResult,
                                    RedirectAttributes redirectAttributes,
-                                   @AuthenticationPrincipal AppUserDetails appUserDetails) {
+                                   @AuthenticationPrincipal AppUserDetails appUserDetails,
+                                   HttpServletRequest httpServletRequest) throws ServletException {
         userChangePasswordDto
                 .setEmail(appUserDetails.getUsername())
                 .setFullName(appUserDetails.getFullName());
@@ -64,10 +68,11 @@ public class PasswordController {
             return "redirect:/users/change-password";
         }
 
+        SessionManagementUtil.logoutUser(httpServletRequest);
         this.credentialService.changePassword(userChangePasswordDto);
-
         return "redirect:/";
     }
+
 
     private static void addFlashAttributesFoUserRegisterDto(UserChangePasswordDto userChangePasswordDto,
                                                             RedirectAttributes redirectAttributes) {
