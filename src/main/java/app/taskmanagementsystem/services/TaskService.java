@@ -3,6 +3,7 @@ package app.taskmanagementsystem.services;
 import app.taskmanagementsystem.domain.dto.model.TaskAddDto;
 import app.taskmanagementsystem.domain.dto.view.TaskDetailsViewDto;
 import app.taskmanagementsystem.domain.entity.TaskEntity;
+import jakarta.mail.MessagingException;
 
 import java.util.List;
 
@@ -23,4 +24,7 @@ public interface TaskService {
 
     void removeUserFromTaskById(Long taskId,
                                 String email);
+
+    void sendEmail() throws MessagingException;
+
 }

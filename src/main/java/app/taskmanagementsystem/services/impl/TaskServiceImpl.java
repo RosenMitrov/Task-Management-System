@@ -6,10 +6,8 @@ import app.taskmanagementsystem.domain.entity.TaskEntity;
 import app.taskmanagementsystem.domain.entity.UserEntity;
 import app.taskmanagementsystem.init.DbInit;
 import app.taskmanagementsystem.repositories.TaskRepository;
-import app.taskmanagementsystem.services.ClassificationService;
-import app.taskmanagementsystem.services.ProgressService;
-import app.taskmanagementsystem.services.TaskService;
-import app.taskmanagementsystem.services.UserService;
+import app.taskmanagementsystem.services.*;
+import jakarta.mail.MessagingException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,19 +30,22 @@ public class TaskServiceImpl implements TaskService, DbInit {
     private final ProgressService progressService;
     private final ClassificationService classificationService;
     private final ModelMapper modelMapper;
+    private final EmailService emailService;
 
     @Autowired
     public TaskServiceImpl(TaskRepository taskRepository,
                            UserService userService,
                            ProgressService progressService,
                            ClassificationService classificationService,
-                           ModelMapper modelMapper) {
+                           ModelMapper modelMapper,
+                           EmailService emailService) {
         this.taskRepository = taskRepository;
         this.userService = userService;
         this.progressService = progressService;
         this.classificationService = classificationService;
 
         this.modelMapper = modelMapper;
+        this.emailService = emailService;
     }
 
     @Override
@@ -74,6 +75,7 @@ public class TaskServiceImpl implements TaskService, DbInit {
                     .setProgress(this.progressService.getProgressEntityByType(IN_PROGRESS))
                     .setClassification(this.classificationService.getClassificationEntityById(randomClassification.nextLong(countClassificationsInDb) + 1))
                     .setStartDate(LocalDateTime.now())
+                    .setDueDate(LocalDateTime.now().plusWeeks(2))
                     .setAssignedUsers(List.of(userUserEntity))
                     .setCreatorName(userUserEntity.getUsername())
                     .setDescription("Some description for Fixing service layer");
@@ -83,6 +85,7 @@ public class TaskServiceImpl implements TaskService, DbInit {
                     .setProgress(this.progressService.getProgressEntityByType(IN_PROGRESS))
                     .setClassification(this.classificationService.getClassificationEntityById(randomClassification.nextLong(countClassificationsInDb) + 1))
                     .setStartDate(LocalDateTime.now())
+                    .setDueDate(LocalDateTime.now().plusWeeks(2))
                     .setAssignedUsers(List.of(moderatorUserEntity, userUserEntity, adminUserEntity))
                     .setCreatorName(moderatorUserEntity.getUsername())
                     .setDescription("Some description for Fixing repository layer");
@@ -190,6 +193,34 @@ public class TaskServiceImpl implements TaskService, DbInit {
             taskEntity.setProgress(this.progressService.getProgressEntityByType(COMPLETED));
         }
         this.taskRepository.saveAndFlush(taskEntity);
+    }
+
+    @Override
+    @Transactional
+    public void sendEmail() throws MessagingException {
+        LocalDateTime currentTime = LocalDateTime.now();
+
+        int year = currentTime.getYear();
+        int month = currentTime.getMonth().getValue();
+        int day = currentTime.getDayOfMonth();
+
+        Optional<List<TaskEntity>> allByDueDate = this.taskRepository.findAllByDueDate_YearAndDueDate_MonthAndDueDate_DayOfMonth(year, month, day);
+        if (allByDueDate.isEmpty()) {
+            // TODO: 3/25/2023 think about exception
+            return;
+        }
+
+        List<TaskEntity> taskEntities = allByDueDate.get();
+        for (TaskEntity task : taskEntities) {
+            List<UserEntity> assignedUsers = task.getAssignedUsers();
+            for (UserEntity assignedUser : assignedUsers) {
+                this.emailService.sendEmailToUserWithTaskWhichDueDateIsToday(assignedUser.getEmail(),
+                        assignedUser.getFirstName() + " " + assignedUser.getLastName(),
+                        task.getId(),
+                        task.getCreatorName(),
+                        task.getTitle());
+            }
+        }
     }
 
 
