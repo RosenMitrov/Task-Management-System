@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+<h1> Welcome to our Task Management System!</h1>
+
+Dear
+<th:block th:text="|${receiverFullName}!|">User</th:block>
+
+
+<p>
+    Please note that today is the last day to complete a task you are working on!
+</p>
+<p>
+    <th:block th:text="|Task id: ${taskId}|">Task id</th:block>
+</p>
+<p>
+    <th:block th:text="|Task title: ${taskTitle}|">Task title</th:block>
+</p>
+<p>
+    <th:block th:text="|Created task by: ${taskCreatorName}|">Task title</th:block>
+</p>
+
+
+Best regards,
+<br>
+Task Management System Team!
+</body>
+</html>
