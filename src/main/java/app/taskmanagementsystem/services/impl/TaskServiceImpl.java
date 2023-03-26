@@ -32,6 +32,7 @@ public class TaskServiceImpl implements TaskService, DbInit {
     private final ModelMapper modelMapper;
     private final EmailService emailService;
 
+
     @Autowired
     public TaskServiceImpl(TaskRepository taskRepository,
                            UserService userService,
@@ -45,6 +46,7 @@ public class TaskServiceImpl implements TaskService, DbInit {
         this.classificationService = classificationService;
 
         this.modelMapper = modelMapper;
+
         this.emailService = emailService;
     }
 
