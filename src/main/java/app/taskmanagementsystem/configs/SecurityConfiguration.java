@@ -20,26 +20,39 @@ import static app.taskmanagementsystem.domain.entity.enums.RoleTypeEnum.USER;
 @EnableWebSecurity
 public class SecurityConfiguration {
 
+
+    private static final String[] ANONYMOUS_FOLDERS = {
+            "/error"
+    };
     private static final String[] ANONYMOUS_ENDPOINTS = {
             "/",
             "/users/login",
             "/users/register",
-            "/users/login-error",
-            "/error"
+            "/users/login-error"
     };
     private static final String[] ROLE_ADMIN_ENDPOINTS = {
-            "/admin/**",
             "/admin/all-users",
+            "/admin/roles",
             "/admin/user-details/**",
             "/admin/user-edit/**",
+            "/admin/user-edit-role/**",
+            "/admin/user-delete/**",
             "/admin/all-departments",
-            "/admin/department-details/**",
-            "/admin/user-delete/**"
+            "/admin/department-details/**"
     };
 
     private static final String[] ROLE_USER_ENDPOINTS = {
-            "/users/**",
-            "/users/add-task"
+            "/users/home",
+            "/users/profile",
+            "/users/tasks/all",
+            "/users/tasks/add-task",
+            "/users/posts/related-to-task-id/**",
+            "/users/posts/create-new-post",
+            "/users/posts/create-new-post-to-task/**",
+            "/users/comments/to-post/**",
+            "/users/change-password",
+            "/users/tasks/assign-logged-user-to-task-by-task-id/**",
+            "/users/tasks/detach-logged-user-from-task-by-task-id/**"
     };
 
 
@@ -50,11 +63,13 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests()
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
 
+                .requestMatchers(ANONYMOUS_FOLDERS).permitAll()
                 .requestMatchers(ANONYMOUS_ENDPOINTS).permitAll()
 
                 .requestMatchers(ROLE_ADMIN_ENDPOINTS).hasRole(ADMIN.name())
 
                 .requestMatchers(ROLE_USER_ENDPOINTS).hasRole(USER.name())
+
 
                 .anyRequest()
                 .authenticated()
@@ -76,7 +91,7 @@ public class SecurityConfiguration {
 
                 .and()
                 .rememberMe()
-                .key("uniqueKeyKasToBePlacedHere123456")
+                .key("uniqueKeyHasToBePlacedHere123456")
                 .tokenValiditySeconds(5 * 24 * 60 * 60);
 
         return httpSecurity

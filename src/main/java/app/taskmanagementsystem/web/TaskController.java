@@ -21,14 +21,10 @@ import java.util.List;
 public class TaskController {
 
     private final TaskService taskService;
-    private final UserService userService;
 
     @Autowired
-    public TaskController(TaskService taskService,
-                          UserService userService) {
+    public TaskController(TaskService taskService) {
         this.taskService = taskService;
-
-        this.userService = userService;
     }
 
     @GetMapping("/all")
@@ -39,14 +35,14 @@ public class TaskController {
         return "tasks-all";
     }
 
-    @PatchMapping("/map-task/{taskId}")
+    @PatchMapping("/assign-logged-user-to-task-by-task-id/{taskId}")
     public String getTaskById(@PathVariable("taskId") Long taskId,
                               @AuthenticationPrincipal AppUserDetails appUserDetails) {
         this.taskService.assignUserToTask(taskId, appUserDetails.getUsername());
         return "redirect:/users/tasks/all";
     }
 
-    @PatchMapping("/detach-user-from-task/{taskId}")
+    @PatchMapping("/detach-logged-user-from-task-by-task-id/{taskId}")
     public String declineTaskById(@PathVariable("taskId") Long taskId,
                               @AuthenticationPrincipal AppUserDetails appUserDetails) {
         this.taskService.removeUserFromTaskById(taskId, appUserDetails.getUsername());

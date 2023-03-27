@@ -10,5 +10,5 @@ public interface ClassificationService {
 
     ClassificationEntity getClassificationEntityById(long classificationId);
 
-    ClassificationEntity getClassificationByEnuType(ClassificationTypeEnum classification);
+    ClassificationEntity getClassificationByEnumType(ClassificationTypeEnum classification);
 }

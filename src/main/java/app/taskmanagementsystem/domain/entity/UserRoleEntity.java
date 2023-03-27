@@ -17,7 +17,6 @@ public class UserRoleEntity extends BaseEntity {
     @Column(name = "description", nullable = false)
     private String description;
 
-    // TODO: 3/20/2023 da mahna eager
     @ManyToMany(mappedBy = "roles", targetEntity = UserEntity.class)
     private List<UserEntity> users;
 
@@ -51,7 +50,6 @@ public class UserRoleEntity extends BaseEntity {
         return this;
     }
 
-    // TODO: 3/17/2023 it is clear method for deleting form many to many
     public void removeRoleFromAllUsers(UserRoleEntity roleToDel) {
         if (roleToDel == null) {
             return;

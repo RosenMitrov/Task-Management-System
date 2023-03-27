@@ -28,7 +28,6 @@ public class UserAuthenticationController {
         return "login";
     }
 
-
     @PostMapping("/login-error")
     public String errorLogin(UserLoginDto userLoginDto,
                              RedirectAttributes redirectAttributes) {

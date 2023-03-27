@@ -48,7 +48,7 @@
             <td>
                 <th:block th:if="*{assignedUserInSession}">
                     <form
-                            th:action="@{/users/tasks/detach-user-from-task/{taskId}(taskId=*{id})}"
+                            th:action="@{/users/tasks/detach-logged-user-from-task-by-task-id/{taskId}(taskId=*{id})}"
                             th:method="PATCH">
                         <button th:text="(${task.progress.progress} == ${T(app.taskmanagementsystem.domain.entity.enums.ProgressTypeEnum).RE_OPEN} ? 'RE-FINISH' : 'FINISH')"
                                 type="submit" class="btn btn-admin-delete">
@@ -58,7 +58,7 @@
                 </th:block>
                 <th:block th:unless="*{assignedUserInSession}">
                     <form
-                            th:action="@{/users/tasks/map-task/{taskId}(taskId=*{id})}"
+                            th:action="@{/users/tasks/assign-logged-user-to-task-by-task-id/{taskId}(taskId=*{id})}"
                             th:method="PATCH">
                         <button th:text="(${task.progress.progress} == ${T(app.taskmanagementsystem.domain.entity.enums.ProgressTypeEnum).COMPLETED} ? 'RE-OPEN' : 'TAKE')"
                                 type="submit" class="btn btn-admin-details">
@@ -78,7 +78,7 @@
                 </select>
             </td>
             <td>
-                <a th:href="@{/users/posts/to-task/{taskId}(taskId=*{id})}" class="btn btn-admin-details">View</a>
+                <a th:href="@{/users/posts/related-to-task-id/{taskId}(taskId=*{id})}" class="btn btn-admin-details">View</a>
             </td>
         </tr>
 

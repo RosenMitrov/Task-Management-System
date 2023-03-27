@@ -32,7 +32,7 @@ public class PostController {
     }
 
 
-    @GetMapping("/to-task/{taskId}")
+    @GetMapping("/related-to-task-id/{taskId}")
     public String getTasksPosts(@PathVariable("taskId") Long taskId,
                                 Model model) {
         List<PostDetailsViewDto> allPostsByTaskId = this.postService.findAllPostsByTaskId(taskId);
@@ -44,11 +44,9 @@ public class PostController {
     @GetMapping("/create-new-post-to-task/{taskId}")
     public String getCreationPage(@PathVariable("taskId") Long taskId,
                                   Model model) {
-        System.out.println();
         if (!model.containsAttribute("postAddDto")) {
             model.addAttribute("postAddDto", new PostAddDto().setTaskId(taskId));
         }
-
         return "posts-add";
     }
 

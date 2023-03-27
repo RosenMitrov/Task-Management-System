@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-
 @Component
 public class TaskMailScheduler {
 
@@ -19,7 +18,7 @@ public class TaskMailScheduler {
     }
 
 
-    @Scheduled(cron = "0 0 8 * * *")
+    @Scheduled(cron = "0 20 18 * * *")
     public void sendMailAfterSuccessfulCreatingATask() throws MessagingException {
         this.taskService.sendEmail();
     }

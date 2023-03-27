@@ -39,6 +39,7 @@ public class AdminServiceImpl implements AdminService {
                 .stream()
                 .map(userRoleViewAdminDto -> userRoleViewAdminDto.getRole().name())
                 .collect(Collectors.joining(", "));
+
         userById.setShowRoles(roles);
         return userById;
     }

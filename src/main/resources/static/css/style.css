@@ -424,3 +424,11 @@ input {
     max-width: 400px;
 }
 
+/* object. page not found */
+
+.img-object-not-found {
+    width: 220px;
+    height: 230px;
+    opacity: 0.8;
+}
+

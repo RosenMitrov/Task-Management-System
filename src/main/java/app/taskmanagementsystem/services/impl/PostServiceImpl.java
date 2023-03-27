@@ -4,6 +4,7 @@ import app.taskmanagementsystem.domain.dto.model.PostAddDto;
 import app.taskmanagementsystem.domain.dto.view.PostDetailsViewDto;
 import app.taskmanagementsystem.domain.entity.PostEntity;
 import app.taskmanagementsystem.domain.entity.TaskEntity;
+import app.taskmanagementsystem.domain.exception.ObjNotFoundException;
 import app.taskmanagementsystem.init.DbInit;
 import app.taskmanagementsystem.repositories.PostRepository;
 import app.taskmanagementsystem.services.PostService;
@@ -72,9 +73,9 @@ public class PostServiceImpl implements PostService, DbInit {
     @Override
     public PostEntity getPostEntityById(long postId) {
         Optional<PostEntity> postEntityById = this.postRepository.findById(postId);
+
         if (postEntityById.isEmpty()) {
-            // TODO: 3/16/2023 think about exception
-            return null;
+            throw new  ObjNotFoundException();
         }
 
         return postEntityById.get();
@@ -83,8 +84,9 @@ public class PostServiceImpl implements PostService, DbInit {
     @Override
     @Transactional
     public List<PostDetailsViewDto> findAllPostsByTaskId(Long taskId) {
-        List<PostEntity> allPostsByTaskId = this.postRepository.findAllByTask_Id(taskId);
-        return allPostsByTaskId
+        List<PostEntity> optionalPostsByTaskId = this.postRepository.findAllByTask_Id(taskId);
+
+        return optionalPostsByTaskId
                 .stream()
                 .map(this::fromPostEntityToPostDetailsView)
                 .collect(Collectors.toList());

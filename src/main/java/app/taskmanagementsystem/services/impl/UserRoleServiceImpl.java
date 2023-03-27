@@ -3,6 +3,7 @@ package app.taskmanagementsystem.services.impl;
 import app.taskmanagementsystem.domain.dto.view.rest.RoleRestViewDto;
 import app.taskmanagementsystem.domain.entity.UserRoleEntity;
 import app.taskmanagementsystem.domain.entity.enums.RoleTypeEnum;
+import app.taskmanagementsystem.domain.exception.ObjNotFoundException;
 import app.taskmanagementsystem.init.DbInit;
 import app.taskmanagementsystem.repositories.UserRoleRepository;
 import app.taskmanagementsystem.services.UserRoleService;
@@ -110,8 +111,7 @@ public class UserRoleServiceImpl implements UserRoleService, DbInit {
     private UserRoleEntity getRoleByType(RoleTypeEnum roleTypeEnum) {
         Optional<UserRoleEntity> firstByRole = this.userRoleRepository.findFirstByRole(roleTypeEnum);
         if (firstByRole.isEmpty()) {
-            // TODO: 3/14/2023 think about exception
-            throw new NoSuchElementException();
+           throw new ObjNotFoundException();
         }
         return firstByRole.get();
     }

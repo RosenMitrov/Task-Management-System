@@ -8,6 +8,7 @@ import app.taskmanagementsystem.domain.entity.DepartmentEntity;
 import app.taskmanagementsystem.domain.entity.UserEntity;
 import app.taskmanagementsystem.domain.entity.UserRoleEntity;
 import app.taskmanagementsystem.domain.entity.enums.RoleTypeEnum;
+import app.taskmanagementsystem.domain.exception.ObjNotFoundException;
 import app.taskmanagementsystem.init.DbInit;
 import app.taskmanagementsystem.repositories.UserRepository;
 import app.taskmanagementsystem.services.*;
@@ -98,7 +99,6 @@ public class UserServiceImpl implements UserService, DbInit {
 
     @Override
     public UserEntity getUserEntityByEmail(String email) {
-        // TODO: 3/16/2023 think about exception below???
         return this.userRepository
                 .findFirstByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User with email " + email + " not found."));
@@ -118,8 +118,7 @@ public class UserServiceImpl implements UserService, DbInit {
     public UserDetailsViewDto getUserDetailsViewByUserId(Long userId) {
         Optional<UserEntity> userById = this.userRepository.findById(userId);
         if (userById.isEmpty()) {
-            //todo think about exception
-            return null;
+            throw new ObjNotFoundException();
         }
         return mapEntityToDetailsView(userById.get());
     }
@@ -129,7 +128,7 @@ public class UserServiceImpl implements UserService, DbInit {
     public void deleteUserEntityById(Long userId) {
         Optional<UserEntity> optionalUser = this.userRepository.findById(userId);
         if (optionalUser.isEmpty()) {
-            return;
+           throw new ObjNotFoundException();
         }
 
         UserEntity userEntity = optionalUser.get();
@@ -144,8 +143,7 @@ public class UserServiceImpl implements UserService, DbInit {
                            UserDetailsViewDto userDetailsViewDto) {
         Optional<UserEntity> optionalUser = this.userRepository.findById(userId);
         if (optionalUser.isEmpty()) {
-            // TODO: 3/19/2023 think about exception
-            return;
+            throw new ObjNotFoundException();
         }
 
         final UserEntity userToBeUpdated = optionalUser.get();
@@ -166,8 +164,7 @@ public class UserServiceImpl implements UserService, DbInit {
                                RoleTypeEnum role) {
         Optional<UserEntity> optionalUser = this.userRepository.findById(userId);
         if (optionalUser.isEmpty()) {
-            // TODO: 3/19/2023 think about exception
-            return;
+            throw new ObjNotFoundException();
         }
 
         List<UserRoleEntity> rolesToBeSet = new ArrayList<>();

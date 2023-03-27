@@ -54,7 +54,7 @@ public class ClassificationServiceImpl implements ClassificationService, DbInit 
     }
 
     @Override
-    public ClassificationEntity getClassificationByEnuType(ClassificationTypeEnum classification) {
+    public ClassificationEntity getClassificationByEnumType(ClassificationTypeEnum classification) {
         Optional<ClassificationEntity> optionalClassificationEntity = this.classificationRepository.findFirstByClassification(classification);
         if (optionalClassificationEntity.isEmpty()) {
             // TODO: 3/19/2023 think about exception!

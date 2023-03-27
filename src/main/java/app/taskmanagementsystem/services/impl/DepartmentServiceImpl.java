@@ -3,6 +3,7 @@ package app.taskmanagementsystem.services.impl;
 import app.taskmanagementsystem.domain.dto.view.DepartmentAdminViewDto;
 import app.taskmanagementsystem.domain.entity.DepartmentEntity;
 import app.taskmanagementsystem.domain.entity.enums.DepartmentTypeEnum;
+import app.taskmanagementsystem.domain.exception.ObjNotFoundException;
 import app.taskmanagementsystem.init.DbInit;
 import app.taskmanagementsystem.repositories.DepartmentRepository;
 import app.taskmanagementsystem.services.DepartmentService;
@@ -85,8 +86,7 @@ public class DepartmentServiceImpl implements DepartmentService, DbInit {
         Optional<DepartmentEntity> optionalDepartmentById = this.departmentRepository.findById(departmentId);
 
         if (optionalDepartmentById.isEmpty()) {
-            // TODO: 3/17/2023 think about exceptions
-            return null;
+            throw new ObjNotFoundException();
         }
         return fromEntityToDepartmentAdminViewDto(
                 optionalDepartmentById.get()

@@ -68,10 +68,8 @@ public class AdminController {
 
     @GetMapping("/all-departments")
     public String adminPanelAllDepartments(Model model) {
-
         final List<DepartmentAdminViewDto> allDepartmentsAdminViews = this.adminService.findAllDepartmentsAdminViews();
         model.addAttribute("allDepartmentsAdminViews", allDepartmentsAdminViews);
-
         return "admin-departments-all";
     }
 

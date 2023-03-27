@@ -2,6 +2,7 @@ package app.taskmanagementsystem.services.impl;
 
 import app.taskmanagementsystem.domain.entity.ProgressEntity;
 import app.taskmanagementsystem.domain.entity.enums.ProgressTypeEnum;
+import app.taskmanagementsystem.domain.exception.ObjNotFoundException;
 import app.taskmanagementsystem.init.DbInit;
 import app.taskmanagementsystem.repositories.ProgressRepository;
 import app.taskmanagementsystem.services.ProgressService;
@@ -45,8 +46,7 @@ public class ProgressServiceImpl implements ProgressService, DbInit {
     public ProgressEntity getProgressEntityByType(ProgressTypeEnum progressTypeEnum) {
         Optional<ProgressEntity> firstByProgress = this.progressRepository.findFirstByProgress(progressTypeEnum);
         if (firstByProgress.isEmpty()) {
-            //todo think about exception!
-            return null;
+            throw new ObjNotFoundException();
         }
         return firstByProgress.get();
     }

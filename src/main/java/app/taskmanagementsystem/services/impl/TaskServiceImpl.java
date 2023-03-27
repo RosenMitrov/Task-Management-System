@@ -4,6 +4,7 @@ import app.taskmanagementsystem.domain.dto.model.TaskAddDto;
 import app.taskmanagementsystem.domain.dto.view.TaskDetailsViewDto;
 import app.taskmanagementsystem.domain.entity.TaskEntity;
 import app.taskmanagementsystem.domain.entity.UserEntity;
+import app.taskmanagementsystem.domain.exception.ObjNotFoundException;
 import app.taskmanagementsystem.init.DbInit;
 import app.taskmanagementsystem.repositories.TaskRepository;
 import app.taskmanagementsystem.services.*;
@@ -106,8 +107,7 @@ public class TaskServiceImpl implements TaskService, DbInit {
         Optional<TaskEntity> taskRepositoryById = this.taskRepository.findById(taskId);
 
         if (taskRepositoryById.isEmpty()) {
-            // TODO: 3/16/2023 think about exception
-            return null;
+           throw new ObjNotFoundException();
         }
         return taskRepositoryById.get();
     }
@@ -116,15 +116,10 @@ public class TaskServiceImpl implements TaskService, DbInit {
     @Transactional
     public List<TaskDetailsViewDto> getAllTasksDetailsViews(String sessionUserEmail) {
         List<TaskEntity> allTaskEntities = this.taskRepository.findAll();
-
-
-        List<TaskDetailsViewDto> allTasks = allTaskEntities
+        return allTaskEntities
                 .stream()
                 .map(taskEntity -> fromTaskEntityToDetailsView(taskEntity, sessionUserEmail))
                 .collect(Collectors.toList());
-
-
-        return allTasks;
     }
 
     private TaskDetailsViewDto fromTaskEntityToDetailsView(TaskEntity taskEntity,
@@ -141,8 +136,7 @@ public class TaskServiceImpl implements TaskService, DbInit {
     public TaskDetailsViewDto getTaskDetailsViewById(Long taskId) {
         Optional<TaskEntity> taskEntityById = this.taskRepository.findById(taskId);
         if (taskEntityById.isEmpty()) {
-            // TODO: 3/18/2023 think about exception
-            return null;
+            throw new ObjNotFoundException();
         }
         return fromTaskEntityToDetailsView(taskEntityById.get());
     }
@@ -153,7 +147,7 @@ public class TaskServiceImpl implements TaskService, DbInit {
         TaskEntity taskTobeSaved = this.modelMapper.map(taskAddDto, TaskEntity.class);
         taskTobeSaved
                 .setProgress(this.progressService.getProgressEntityByType(OPEN))
-                .setClassification(this.classificationService.getClassificationByEnuType(taskAddDto.getClassification()))
+                .setClassification(this.classificationService.getClassificationByEnumType(taskAddDto.getClassification()))
                 .setCreatorName(creatorUsername)
                 .setStartDate(LocalDateTime.now());
         this.taskRepository.saveAndFlush(taskTobeSaved);
@@ -165,7 +159,7 @@ public class TaskServiceImpl implements TaskService, DbInit {
                                  String email) {
         Optional<TaskEntity> optionalTask = this.taskRepository.findById(taskId);
         if (optionalTask.isEmpty()) {
-            return;
+            throw new ObjNotFoundException();
         }
         TaskEntity taskEntity = optionalTask.get();
         if (taskEntity.getProgress().getProgress() == OPEN) {
@@ -206,14 +200,12 @@ public class TaskServiceImpl implements TaskService, DbInit {
         int month = currentTime.getMonth().getValue();
         int day = currentTime.getDayOfMonth();
 
-        Optional<List<TaskEntity>> allByDueDate = this.taskRepository.findAllByDueDate_YearAndDueDate_MonthAndDueDate_DayOfMonth(year, month, day);
-        if (allByDueDate.isEmpty()) {
-            // TODO: 3/25/2023 think about exception
+        List<TaskEntity> allByDueDate = this.taskRepository.findAllByDueDate_YearAndDueDate_MonthAndDueDate_DayOfMonth(year, month, day);
+        if (allByDueDate.size() == 0) {
             return;
         }
 
-        List<TaskEntity> taskEntities = allByDueDate.get();
-        for (TaskEntity task : taskEntities) {
+        for (TaskEntity task : allByDueDate) {
             List<UserEntity> assignedUsers = task.getAssignedUsers();
             for (UserEntity assignedUser : assignedUsers) {
                 this.emailService.sendEmailToUserWithTaskWhichDueDateIsToday(assignedUser.getEmail(),

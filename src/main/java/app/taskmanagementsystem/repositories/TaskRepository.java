@@ -19,7 +19,7 @@ public interface TaskRepository extends JpaRepository<TaskEntity, Long> {
 
     @Query("SELECT t FROM TaskEntity as t " +
             " where year(t.dueDate) = :y and month(t.dueDate) = :m and day(t.dueDate) = :d ")
-    Optional<List<TaskEntity>> findAllByDueDate_YearAndDueDate_MonthAndDueDate_DayOfMonth(@Param("y") int year,
+    List<TaskEntity> findAllByDueDate_YearAndDueDate_MonthAndDueDate_DayOfMonth(@Param("y") int year,
                                                                                           @Param("m") int month,
                                                                                           @Param("d") int day
     );
