@@ -45,8 +45,8 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public void deleteUserEntityById(Long userId) {
-        this.userService.deleteUserEntityById(userId);
+    public boolean deleteUserEntityById(Long userId, String email) {
+     return    this.userService.deleteUserEntityById(userId, email);
     }
 
     @Override

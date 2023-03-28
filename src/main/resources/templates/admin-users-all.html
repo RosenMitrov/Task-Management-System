@@ -16,6 +16,8 @@
 
 <div class="container mytbodyconfig">
     <h2 class="text-white text-center">List of all users</h2>
+    <small class="btn-admin-details" th:if="${selfDelete}">You are trying to delete yourself. It is not possible! Please be more careful!</small>
+    <small class="btn-admin-delete" th:if="${deletedSuccessfully}">User was deleted successfully.</small>
     <table class="table table-bordered table-responsive">
 
         <thead class="mytheadconfig text-center">
@@ -44,6 +46,7 @@
         </tr>
         </tbody>
     </table>
+
 </div>
 
 <footer class="footer bg-transparent mt-5">

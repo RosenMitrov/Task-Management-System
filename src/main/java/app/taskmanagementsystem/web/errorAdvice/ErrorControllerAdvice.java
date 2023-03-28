@@ -1,4 +1,4 @@
-package app.taskmanagementsystem.web.error;
+package app.taskmanagementsystem.web.errorAdvice;
 
 import app.taskmanagementsystem.domain.exception.ObjNotFoundException;
 import org.springframework.http.HttpStatus;

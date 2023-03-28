@@ -4,11 +4,14 @@ import app.taskmanagementsystem.domain.dto.view.DepartmentAdminViewDto;
 import app.taskmanagementsystem.domain.dto.view.UserBasicViewDto;
 import app.taskmanagementsystem.domain.dto.view.UserDetailsViewDto;
 import app.taskmanagementsystem.domain.entity.enums.RoleTypeEnum;
+import app.taskmanagementsystem.security.AppUserDetails;
 import app.taskmanagementsystem.services.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -86,8 +89,15 @@ public class AdminController {
 
 
     @DeleteMapping("/user-delete/{userId}")
-    public String deleteUser(@PathVariable("userId") Long userId) {
-        this.adminService.deleteUserEntityById(userId);
+    public String deleteUser(@PathVariable("userId") Long userId,
+                             @AuthenticationPrincipal
+                             AppUserDetails appUserDetails,
+                             RedirectAttributes redirectAttributes) {
+
+        boolean isDeleted = this.adminService.deleteUserEntityById(userId, appUserDetails.getUsername());
+        redirectAttributes.addFlashAttribute("selfDelete", !isDeleted);
+        redirectAttributes.addFlashAttribute("deletedSuccessfully", isDeleted);
         return "redirect:/admin/all-users";
     }
+
 }

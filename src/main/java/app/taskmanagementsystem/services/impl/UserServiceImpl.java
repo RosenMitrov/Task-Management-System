@@ -20,10 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static app.taskmanagementsystem.domain.entity.enums.DepartmentTypeEnum.*;
@@ -125,17 +122,28 @@ public class UserServiceImpl implements UserService, DbInit {
 
     @Override
     @Transactional
-    public void deleteUserEntityById(Long userId) {
-        Optional<UserEntity> optionalUser = this.userRepository.findById(userId);
-        if (optionalUser.isEmpty()) {
-           throw new ObjNotFoundException();
+    public boolean deleteUserEntityById(Long userId,
+                                     String email) {
+        Optional<UserEntity> optionalUserInSession = this.userRepository.findFirstByEmail(email);
+        if (optionalUserInSession.isEmpty()) {
+            throw new ObjNotFoundException();
+        }
+        Optional<UserEntity> optionalUserToBeRemoved = this.userRepository.findById(userId);
+        if (optionalUserToBeRemoved.isEmpty()) {
+            throw new ObjNotFoundException();
         }
 
-        UserEntity userEntity = optionalUser.get();
-        userEntity.removeUserFromAllTasks(userEntity);
-        DepartmentEntity department = userEntity.getDepartment();
+        UserEntity userInSession = optionalUserInSession.get();
+        UserEntity userToBeRemoved = optionalUserToBeRemoved.get();
+
+        if (Objects.equals(userInSession.getId(), userToBeRemoved.getId())) {
+            return false;
+        }
+        userToBeRemoved.removeUserFromAllTasks(userToBeRemoved);
+        DepartmentEntity department = userToBeRemoved.getDepartment();
         this.departmentService.decrementDepartmentCount(department);
         this.userRepository.deleteById(userId);
+        return true;
     }
 
     @Override

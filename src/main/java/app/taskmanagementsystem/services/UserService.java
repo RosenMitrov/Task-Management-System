@@ -23,7 +23,7 @@ public interface UserService {
 
     UserDetailsViewDto getUserDetailsViewByUserId(Long userId);
 
-    void deleteUserEntityById(Long userId);
+    boolean deleteUserEntityById(Long userId, String email);
 
     void updateUser(Long userId,
                     UserDetailsViewDto userDetailsViewDto);
