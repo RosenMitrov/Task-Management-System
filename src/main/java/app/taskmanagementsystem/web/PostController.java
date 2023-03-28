@@ -1,11 +1,10 @@
 package app.taskmanagementsystem.web;
 
 import app.taskmanagementsystem.domain.dto.model.PostAddDto;
-import app.taskmanagementsystem.domain.dto.model.TaskAddDto;
 import app.taskmanagementsystem.domain.dto.view.PostDetailsViewDto;
-import app.taskmanagementsystem.domain.entity.PostEntity;
 import app.taskmanagementsystem.security.AppUserDetails;
 import app.taskmanagementsystem.services.PostService;
+import app.taskmanagementsystem.services.TaskService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -25,10 +24,13 @@ import java.util.List;
 public class PostController {
 
     private final PostService postService;
+    private final TaskService taskService;
 
     @Autowired
-    public PostController(PostService postService) {
+    public PostController(PostService postService,
+                          TaskService taskService) {
         this.postService = postService;
+        this.taskService = taskService;
     }
 
 
@@ -37,7 +39,7 @@ public class PostController {
                                 Model model) {
         List<PostDetailsViewDto> allPostsByTaskId = this.postService.findAllPostsByTaskId(taskId);
         model.addAttribute("allPostsByTaskId", allPostsByTaskId);
-        model.addAttribute("taskId", taskId);
+        model.addAttribute("taskView", this.taskService.getTaskDetailsViewById(taskId));
         return "posts-all";
     }
 

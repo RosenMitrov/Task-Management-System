@@ -44,7 +44,7 @@ public class TaskController {
 
     @PatchMapping("/detach-logged-user-from-task-by-task-id/{taskId}")
     public String declineTaskById(@PathVariable("taskId") Long taskId,
-                              @AuthenticationPrincipal AppUserDetails appUserDetails) {
+                                  @AuthenticationPrincipal AppUserDetails appUserDetails) {
         this.taskService.removeUserFromTaskById(taskId, appUserDetails.getUsername());
         return "redirect:/users/tasks/all";
     }
@@ -81,6 +81,5 @@ public class TaskController {
 
         return "redirect:/users/tasks/all";
     }
-
 
 }

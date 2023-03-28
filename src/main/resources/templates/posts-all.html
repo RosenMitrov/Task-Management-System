@@ -15,20 +15,22 @@
 
 <div
         class="container bg-container-my w-75 text-center my-margin-top">
-    <div class="container w-100">
-        <h2 th:text="|${allPostsByTaskId.size()}${allPostsByTaskId.size() <= 1 ? ' Post' : ' Posts'} related to Task with ID: ${taskId}|">
+    <div class="container w-100" th:object="${taskView}">
+        <h2 th:text="|${allPostsByTaskId.size()}${allPostsByTaskId.size() <= 1 ? ' Post' : ' Posts'} related to Task with ID: *{id}|">
             All Posts related to Task: </h2>
+        <h4 th:text="|Task description: |"></h4>
+        <h5 th:text="*{description}"></h5>
     </div>
 
     <hr>
-    <div class="row row-card d-flex justify-content-evenly" th:if="${allPostsByTaskId.size() > 0}">
+    <div class="row row-card d-flex justify-content-evenly">
         <div
                 class="col-6 d-grid justify-content-evenly"
                 th:each="post : ${allPostsByTaskId}"
         >
             <div class="card my-card" style="width: 30rem;">
                 <div class="card-body">
-                    <div class="d-grid">
+                    <div class="">
                         <h3 class="card-title" th:text="|Post: ${post.title}|">Post title</h3>
                         <hr>
                         <h5 class="card-title" th:text="|Task: ${post.task.title}|">Task title</h5>
@@ -43,11 +45,11 @@
                     </div>
                 </div>
             </div>
-
         </div>
         <div>
             <a th:href="@{/users/tasks/all}" class="btn btn-admin-neutral mt-3">Go Back</a>
-            <a th:href="@{/users/posts/create-new-post-to-task/{taskId}(taskId=${taskId})}" class="btn btn-admin-update mt-3">Add Post</a>
+            <a th:href="@{/users/posts/create-new-post-to-task/{taskId}(taskId=${taskId})}"
+               class="btn btn-admin-update mt-3">Add Post</a>
         </div>
     </div>
 </div>

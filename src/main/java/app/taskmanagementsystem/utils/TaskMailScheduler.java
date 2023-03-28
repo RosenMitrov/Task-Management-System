@@ -18,7 +18,7 @@ public class TaskMailScheduler {
     }
 
 
-    @Scheduled(cron = "0 20 18 * * *")
+    @Scheduled(cron = "0 0 8 * * *")
     public void sendMailAfterSuccessfulCreatingATask() throws MessagingException {
         this.taskService.sendEmail();
     }

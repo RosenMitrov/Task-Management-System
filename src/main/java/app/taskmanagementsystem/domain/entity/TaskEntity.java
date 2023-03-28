@@ -12,7 +12,7 @@ public class TaskEntity extends BaseEntity {
 
     @Column(name = "title", nullable = false)
     private String title;
-    @Column(name = "description", nullable = false)
+    @Column(name = "description", nullable = false, length = 1000)
     private String description;
     @Column(name = "start_date", nullable = false)
     private LocalDateTime startDate;

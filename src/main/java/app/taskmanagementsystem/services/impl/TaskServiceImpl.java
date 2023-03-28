@@ -149,7 +149,8 @@ public class TaskServiceImpl implements TaskService, DbInit {
                 .setProgress(this.progressService.getProgressEntityByType(OPEN))
                 .setClassification(this.classificationService.getClassificationByEnumType(taskAddDto.getClassification()))
                 .setCreatorName(creatorUsername)
-                .setStartDate(LocalDateTime.now());
+                .setStartDate(LocalDateTime.now())
+                .setDueDate(LocalDateTime.now().plusWeeks(2));
         this.taskRepository.saveAndFlush(taskTobeSaved);
     }
 

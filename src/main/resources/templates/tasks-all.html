@@ -21,14 +21,14 @@
         <tr>
             <th>ID</th>
             <th>Title</th>
-            <th>Task Creator</th>
+            <th>Creator</th>
             <th>Start Date</th>
             <th>Due Date</th>
             <th>Classification</th>
             <th>Progress</th>
             <th>Action</th>
-            <th>Assigned to usernames</th>
-            <th>Discussion</th>
+            <th>Assigned to</th>
+            <th>Posts</th>
         </tr>
         </thead>
         <tbody class="text-center"
@@ -78,7 +78,7 @@
                 </select>
             </td>
             <td>
-                <a th:href="@{/users/posts/related-to-task-id/{taskId}(taskId=*{id})}" class="btn btn-admin-details">History</a>
+                <a th:href="@{/users/posts/related-to-task-id/{taskId}(taskId=*{id})}" class="btn btn-admin-details">View</a>
             </td>
         </tr>
 
