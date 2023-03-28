@@ -6,6 +6,7 @@ import java.util.List;
 public class PostDetailsViewDto {
     private Long id;
     private String title;
+    private String information;
     private LocalDateTime createdDate;
     private String creatorName;
     private TaskBasicViewDto task;
@@ -29,6 +30,15 @@ public class PostDetailsViewDto {
 
     public PostDetailsViewDto setTitle(String title) {
         this.title = title;
+        return this;
+    }
+
+    public String getInformation() {
+        return information;
+    }
+
+    public PostDetailsViewDto setInformation(String information) {
+        this.information = information;
         return this;
     }
 

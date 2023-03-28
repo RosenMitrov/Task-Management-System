@@ -54,17 +54,20 @@ public class PostServiceImpl implements PostService, DbInit {
                         .setTitle("POST 1")
                         .setCreatedDate(LocalDateTime.now())
                         .setCreatorName(this.userService.getUserEntityByEmail("admin@adminov.bg").getUsername())
-                        .setTask(this.taskService.getTaskEntityById(3L)),
+                        .setTask(this.taskService.getTaskEntityById(3L))
+                        .setInformation("Some basic information related to post 1"),
                 new PostEntity()
                         .setTitle("POST 2")
                         .setCreatedDate(LocalDateTime.now())
                         .setCreatorName(this.userService.getUserEntityByEmail("moderator@moderatorov.bg").getUsername())
-                        .setTask(this.taskService.getTaskEntityById(2L)),
+                        .setTask(this.taskService.getTaskEntityById(2L))
+                        .setInformation("Information related to post 2"),
                 new PostEntity()
                         .setTitle("POST 3")
                         .setCreatedDate(LocalDateTime.now())
                         .setCreatorName(this.userService.getUserEntityByEmail("user@userov.bg").getUsername())
                         .setTask(this.taskService.getTaskEntityById(1L))
+                        .setInformation("Description related to post 3")
         );
 
         this.postRepository.saveAllAndFlush(allPosts);

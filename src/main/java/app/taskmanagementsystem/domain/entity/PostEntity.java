@@ -12,6 +12,9 @@ public class PostEntity extends BaseEntity {
 
     @Column(name = "title", nullable = false)
     private String title;
+
+    @Column(name = "information", nullable = false)
+    private String information;
     @Column(name = "created_date", nullable = false)
     private LocalDateTime createdDate;
     @Column(name = "creator_name", nullable = false)
@@ -32,6 +35,15 @@ public class PostEntity extends BaseEntity {
 
     public PostEntity setTitle(String title) {
         this.title = title;
+        return this;
+    }
+
+    public String getInformation() {
+        return information;
+    }
+
+    public PostEntity setInformation(String information) {
+        this.information = information;
         return this;
     }
 
