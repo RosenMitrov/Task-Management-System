@@ -93,7 +93,7 @@ public class PostServiceImpl implements PostService, DbInit {
     }
 
     @Override
-    public void createNewPost(PostAddDto postAddDto,
+    public PostDetailsViewDto createNewPost(PostAddDto postAddDto,
                               String username) {
         TaskEntity taskEntityById = this.taskService.getTaskEntityById(postAddDto.getTaskId());
 
@@ -103,7 +103,11 @@ public class PostServiceImpl implements PostService, DbInit {
                 .setCreatorName(username)
                 .setCreatedDate(LocalDateTime.now());
 
-        this.postRepository.saveAndFlush(newPostEntity);
+        PostEntity createdPost = this.postRepository.saveAndFlush(newPostEntity);
+
+    return     this.modelMapper.map(createdPost, PostDetailsViewDto.class);
+
+
     }
 
     private PostDetailsViewDto fromPostEntityToPostDetailsView(PostEntity postEntity) {

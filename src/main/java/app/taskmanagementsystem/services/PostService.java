@@ -14,5 +14,5 @@ public interface PostService {
 
     List<PostDetailsViewDto> findAllPostsByTaskId(Long taskId);
 
-    void createNewPost(PostAddDto postAddDto, String username);
+    PostDetailsViewDto createNewPost(PostAddDto postAddDto, String username);
 }

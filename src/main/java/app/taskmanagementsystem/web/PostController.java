@@ -63,7 +63,8 @@ public class PostController {
             return "redirect:/users/posts/create-new-post-to-task/" + postAddDto.getTaskId();
         }
         if (appUserDetails != null) {
-            this.postService.createNewPost(postAddDto, appUserDetails.getNickname());
+            PostDetailsViewDto createdPost = this.postService.createNewPost(postAddDto, appUserDetails.getNickname());
+            return "redirect:/users/posts/related-to-task-id/" + createdPost.getTask().getId();
         }
         return "redirect:/users/tasks/all";
     }
