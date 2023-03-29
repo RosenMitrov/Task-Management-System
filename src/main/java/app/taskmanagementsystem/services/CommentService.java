@@ -11,4 +11,6 @@ public interface CommentService {
     List<CommentDetailsViewDto> findAllCommentsByPostId(Long postId);
 
     void createCommentToPostById(Long postId, CommentDetailsDto commentDetailsDto);
+
+    Long deleteCommentById(Long commentId);
 }

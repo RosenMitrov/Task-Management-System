@@ -4,6 +4,7 @@ import app.taskmanagementsystem.domain.dto.model.CommentDetailsDto;
 import app.taskmanagementsystem.domain.dto.view.CommentDetailsViewDto;
 import app.taskmanagementsystem.domain.entity.CommentEntity;
 import app.taskmanagementsystem.domain.entity.UserEntity;
+import app.taskmanagementsystem.domain.exception.ObjNotFoundException;
 import app.taskmanagementsystem.init.DbInit;
 import app.taskmanagementsystem.repositories.CommentRepository;
 import app.taskmanagementsystem.services.CommentService;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -102,6 +104,22 @@ public class CommentServiceImpl implements CommentService, DbInit {
         CommentEntity commentToBeSaved = this.modelMapper.map(commentDetailsDto, CommentEntity.class);
         commentToBeSaved.setCreatedDate(LocalDateTime.now());
         this.commentRepository.saveAndFlush(commentToBeSaved);
+    }
+
+    @Override
+    public Long deleteCommentById(Long commentId) {
+        Optional<CommentEntity> optionalComment = this.commentRepository.findById(commentId);
+        if (optionalComment.isEmpty()) {
+            throw new ObjNotFoundException();
+        }
+
+        CommentEntity commentTobeDeleted = optionalComment.get();
+        Long postId = commentTobeDeleted.getPost().getId();
+        commentTobeDeleted.setPost(null);
+
+        this.commentRepository.deleteById(commentId);
+
+        return postId;
     }
 
     private CommentDetailsViewDto fromCommentEntityToCommentDetailsView(CommentEntity commentEntity) {

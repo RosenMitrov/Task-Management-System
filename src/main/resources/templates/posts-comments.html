@@ -15,9 +15,10 @@
 <div class="container bg-container-my my-margin-top" th:object="${postDetailsViewDtoById}">
     <div class="card row-card">
         <div class="card-title d-flex justify-content-center mt-3">
-            <a th:href="@{/users/posts/related-to-task-id/{taskId}(taskId=*{task.id})}" class="btn btn-admin-neutral mx-2">Go back</a>
+            <a th:href="@{/users/posts/related-to-task-id/{taskId}(taskId=*{task.id})}"
+               class="btn btn-admin-neutral mx-2">Go back</a>
         </div>
-        <div class="card-header" >
+        <div class="card-header">
             <h5>Post description:</h5>
             <p th:text="|*{information}|"></p>
         </div>
@@ -25,16 +26,21 @@
             <h4 th:text="${allCommentsByPostId.size() > 0} ? 'Comments' : 'Write a comment'">Comments</h4>
         </div>
 
-        <div class="container" >
+        <div class="container">
             <ul class="list-group list-group-flush rounded-5 opacity-75" th:each="comment : ${allCommentsByPostId}">
                 <strong th:text="|From: ${comment.creatorName} Date: ${#temporals.format(comment.createdDate, 'dd-MM-yyyy HH:mm:ss')}|"
-                       class="list-group-item text-success opacity-75">
+                        class="list-group-item text-success opacity-75">
                 </strong>
                 <li class="list-group-item fw-bold" th:text="${comment.message}">
                     Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore pariatur
                     asperiores placeat cumque voluptas odit iste saepe, at rerum, maiores dolores delectus deleniti
                     magnam eum nihil, veniam eveniet alias ipsum.
                 </li>
+                <form
+                        th:action="@{/users/comments/delete-comment/{commentId}(commentId=${comment.id})}"
+                        th:method="delete">
+                    <button class="btn btn-admin-delete opacity-75" type="submit">Delete comment</button>
+                </form>
                 <hr>
             </ul>
         </div>
@@ -54,9 +60,9 @@
                         th:errorclass="is-invalid"
                         class="form-control mycol-config opacity-50">
                 </textarea>
-                    <small th:class="'invalid-feedback mt-1 ps-2 rounded-3 error-color-input text-center'">
-                        Comment length must be at least 5 characters.
-                    </small>
+                <small th:class="'invalid-feedback mt-1 ps-2 rounded-3 error-color-input text-center'">
+                    Comment length must be at least 5 characters.
+                </small>
             </div>
             <button type="submit" class="btn btn-admin-details mt-3">Comment</button>
         </form>
