@@ -1,27 +1,28 @@
-package app.taskmanagementsystem.domain.dto.view;
+package app.taskmanagementsystem.domain.dto.model;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 import java.time.LocalDateTime;
 
-public class CommentDetailsViewDto {
+public class CommentDetailsDto {
 
     private Long id;
     private Long postId;
-
+    @NotBlank
+    @Size(min = 5)
     private String message;
     private LocalDateTime createdDate;
     private String creatorName;
 
-    public CommentDetailsViewDto() {
+    public CommentDetailsDto() {
     }
 
     public Long getId() {
         return id;
     }
 
-    public CommentDetailsViewDto setId(Long id) {
+    public CommentDetailsDto setId(Long id) {
         this.id = id;
         return this;
     }
@@ -30,7 +31,7 @@ public class CommentDetailsViewDto {
         return postId;
     }
 
-    public CommentDetailsViewDto setPostId(Long postId) {
+    public CommentDetailsDto setPostId(Long postId) {
         this.postId = postId;
         return this;
     }
@@ -39,7 +40,7 @@ public class CommentDetailsViewDto {
         return message;
     }
 
-    public CommentDetailsViewDto setMessage(String message) {
+    public CommentDetailsDto setMessage(String message) {
         this.message = message;
         return this;
     }
@@ -48,7 +49,7 @@ public class CommentDetailsViewDto {
         return createdDate;
     }
 
-    public CommentDetailsViewDto setCreatedDate(LocalDateTime createdDate) {
+    public CommentDetailsDto setCreatedDate(LocalDateTime createdDate) {
         this.createdDate = createdDate;
         return this;
     }
@@ -57,7 +58,7 @@ public class CommentDetailsViewDto {
         return creatorName;
     }
 
-    public CommentDetailsViewDto setCreatorName(String creatorName) {
+    public CommentDetailsDto setCreatorName(String creatorName) {
         this.creatorName = creatorName;
         return this;
     }

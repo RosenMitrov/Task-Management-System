@@ -1,5 +1,6 @@
 package app.taskmanagementsystem.services.impl;
 
+import app.taskmanagementsystem.domain.dto.model.CommentDetailsDto;
 import app.taskmanagementsystem.domain.dto.view.CommentDetailsViewDto;
 import app.taskmanagementsystem.domain.entity.CommentEntity;
 import app.taskmanagementsystem.domain.entity.UserEntity;
@@ -11,6 +12,7 @@ import app.taskmanagementsystem.services.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -92,6 +94,14 @@ public class CommentServiceImpl implements CommentService, DbInit {
                 .stream()
                 .map(this::fromCommentEntityToCommentDetailsView)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void createCommentToPostById(Long postId,
+                                           CommentDetailsDto commentDetailsDto) {
+        CommentEntity commentToBeSaved = this.modelMapper.map(commentDetailsDto, CommentEntity.class);
+        commentToBeSaved.setCreatedDate(LocalDateTime.now());
+        this.commentRepository.saveAndFlush(commentToBeSaved);
     }
 
     private CommentDetailsViewDto fromCommentEntityToCommentDetailsView(CommentEntity commentEntity) {

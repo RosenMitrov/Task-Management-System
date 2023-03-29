@@ -114,6 +114,18 @@ public class PostServiceImpl implements PostService, DbInit {
 
     }
 
+    @Override
+    @Transactional
+    public PostDetailsViewDto getPostDetailsViewDtoById(Long postId) {
+
+        Optional<PostEntity> optionalPost = this.postRepository.findById(postId);
+        if (optionalPost.isEmpty()) {
+            throw new ObjNotFoundException();
+        }
+
+        return fromPostEntityToPostDetailsView(optionalPost.get());
+    }
+
     private PostDetailsViewDto fromPostEntityToPostDetailsView(PostEntity postEntity) {
         return this.modelMapper
                 .map(postEntity, PostDetailsViewDto.class);
