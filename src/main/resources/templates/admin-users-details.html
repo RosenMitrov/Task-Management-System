@@ -123,25 +123,8 @@
         <div class="container d-flex justify-content-evenly">
             <a th:href="@{/admin/user-edit/{userId}(userId=*{id})}" class="btn btn-admin-update">Edit</a>
             <button type="button" class="btn btn-admin-delete" id="liveToastBtn">Delete</button>
-            <a onclick="history.back()" class="btn btn-admin-neutral">Go back</a>
+            <a th:href="@{/admin/all-users}" class="btn btn-admin-neutral">Go back</a>
         </div>
-        <!-- преместено  горе  -->
-        <!--        <div class="toast-container position-fixed top-50 start-50 translate-middle">-->
-        <!--            <div id="liveToast" class="toast toast-color" role="alert" aria-live="assertive" aria-atomic="true">-->
-        <!--                <div class="toast-header mytoast-body-color">-->
-        <!--                    <strong class="me-auto">Are you sure you want to permanently delete this employee?</strong>-->
-        <!--                </div>-->
-        <!--                <div class="toast-body mytoast-body-color">-->
-
-        <!--                    <div class="container d-flex justify-content-end">-->
-        <!--                        <a th:href="@{/admin/employee/info}" class="btn btn-admin-neutral mx-3">No</a>-->
-        <!--                        <form action="" method="post">-->
-        <!--                            <button type="button" class="btn btn-admin-delete" id="delete-btn">Yes</button>-->
-        <!--                        </form>-->
-        <!--                    </div>-->
-        <!--                </div>-->
-        <!--            </div>-->
-        <!--        </div>-->
     </div>
 </main>
 

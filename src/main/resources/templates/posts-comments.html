@@ -14,8 +14,8 @@
 
 <div class="container bg-container-my my-margin-top" th:object="${postDetailsViewDtoById}">
     <div class="card row-card">
-        <div class="card-title d-flex justify-content-center mt-3" >
-            <a href="" class="btn btn-admin-neutral mx-2">Go back</a>
+        <div class="card-title d-flex justify-content-center mt-3">
+            <a th:href="@{/users/posts/related-to-task-id/{taskId}(taskId=*{task.id})}" class="btn btn-admin-neutral mx-2">Go back</a>
         </div>
         <div class="card-header" >
             <h5>Post description:</h5>

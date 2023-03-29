@@ -52,7 +52,8 @@
                 <tbody th:each="user : *{users}">
                 <tr class="mytrowconfig text-center">
                     <td
-                            th:text="|ID: ${user.id}, Username: ${user.username}, Email: ${user.email}, Age: ${user.age}|">Name of user
+                            th:text="|ID: ${user.id}, Username: ${user.username}, Email: ${user.email}, Age: ${user.age}|">
+                        Name of user
                     </td>
                 </tr>
                 </tbody>
@@ -61,7 +62,7 @@
 
         <div class="container d-grid mt-4">
             <div class="col-6 mycol-config btn-col-m-s">
-                <a onclick="history.back()" class="btn btn-admin-neutral">Go back</a>
+                <a th:href="@{/admin/all-departments}" class="btn btn-admin-neutral">Go back</a>
             </div>
         </div>
     </div>
