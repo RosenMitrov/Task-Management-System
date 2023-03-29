@@ -43,6 +43,25 @@
                 </p>
             </div>
 
+            <div class="col mycol-config d-grid justify-content-center">
+                <label class="h4" for="information">Information</label>
+
+                <textarea
+                        class="mycol-config rounded-3"
+                        name="information"
+                        id="information"
+                        rows="3"
+                        cols="38"
+                        th:field="*{information}"
+                        th:errorclass="is-invalid"
+                >
+                    some description
+                </textarea>
+                <p th:class="'invalid-feedback mt-1 ps-2 rounded-3 error-color-input'">
+                    <small>Title must be at least 3 characters.</small>
+                </p>
+            </div>
+
         </div>
         <div class="col-12 mycol-config mt-3">
             <button type="submit" class="btn btn-admin-toast">Create Post</button>

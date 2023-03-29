@@ -48,7 +48,7 @@ public class PostServiceImpl implements PostService, DbInit {
         if (isDbInit()) {
             return;
         }
-        
+
         List<PostEntity> allPosts = List.of(
                 new PostEntity()
                         .setTitle("POST 1")
@@ -78,7 +78,7 @@ public class PostServiceImpl implements PostService, DbInit {
         Optional<PostEntity> postEntityById = this.postRepository.findById(postId);
 
         if (postEntityById.isEmpty()) {
-            throw new  ObjNotFoundException();
+            throw new ObjNotFoundException();
         }
 
         return postEntityById.get();
@@ -97,18 +97,19 @@ public class PostServiceImpl implements PostService, DbInit {
 
     @Override
     public PostDetailsViewDto createNewPost(PostAddDto postAddDto,
-                              String username) {
+                                            String username) {
         TaskEntity taskEntityById = this.taskService.getTaskEntityById(postAddDto.getTaskId());
 
         PostEntity newPostEntity = new PostEntity()
                 .setTitle(postAddDto.getTitle())
+                .setInformation(postAddDto.getInformation())
                 .setTask(taskEntityById)
                 .setCreatorName(username)
                 .setCreatedDate(LocalDateTime.now());
 
         PostEntity createdPost = this.postRepository.saveAndFlush(newPostEntity);
 
-    return     this.modelMapper.map(createdPost, PostDetailsViewDto.class);
+        return this.modelMapper.map(createdPost, PostDetailsViewDto.class);
 
 
     }

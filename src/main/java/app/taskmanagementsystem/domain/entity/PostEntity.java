@@ -13,7 +13,7 @@ public class PostEntity extends BaseEntity {
     @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(name = "information", nullable = false)
+    @Column(name = "information", nullable = false, length = 1000)
     private String information;
     @Column(name = "created_date", nullable = false)
     private LocalDateTime createdDate;
