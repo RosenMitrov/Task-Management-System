@@ -13,7 +13,6 @@ import app.taskmanagementsystem.services.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -100,7 +99,7 @@ public class CommentServiceImpl implements CommentService, DbInit {
 
     @Override
     public void createCommentToPostById(Long postId,
-                                           CommentDetailsDto commentDetailsDto) {
+                                        CommentDetailsDto commentDetailsDto) {
         CommentEntity commentToBeSaved = this.modelMapper.map(commentDetailsDto, CommentEntity.class);
         commentToBeSaved.setCreatedDate(LocalDateTime.now());
         this.commentRepository.saveAndFlush(commentToBeSaved);
@@ -108,18 +107,32 @@ public class CommentServiceImpl implements CommentService, DbInit {
 
     @Override
     public Long deleteCommentById(Long commentId) {
+        CommentEntity commentTobeDeleted = getCommentById(commentId);
+        Long postId = commentTobeDeleted.getPost().getId();
+        commentTobeDeleted.setPost(null);
+        this.commentRepository.deleteById(commentId);
+        return postId;
+    }
+
+    @Override
+    public boolean checkIfDeleteOwnComment(Long commentId,
+                                           String nickname) {
+        CommentEntity commentEntity = getCommentById(commentId);
+        return commentEntity.getCreatorName().equals(nickname);
+    }
+
+    @Override
+    public Long getPostIdByCommentId(Long commentId) {
+        CommentEntity commentEntity = getCommentById(commentId);
+        return commentEntity.getPost().getId();
+    }
+
+    private CommentEntity getCommentById(Long commentId) {
         Optional<CommentEntity> optionalComment = this.commentRepository.findById(commentId);
         if (optionalComment.isEmpty()) {
             throw new ObjNotFoundException();
         }
-
-        CommentEntity commentTobeDeleted = optionalComment.get();
-        Long postId = commentTobeDeleted.getPost().getId();
-        commentTobeDeleted.setPost(null);
-
-        this.commentRepository.deleteById(commentId);
-
-        return postId;
+        return optionalComment.get();
     }
 
     private CommentDetailsViewDto fromCommentEntityToCommentDetailsView(CommentEntity commentEntity) {

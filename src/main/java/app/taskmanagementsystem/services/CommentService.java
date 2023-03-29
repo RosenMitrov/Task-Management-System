@@ -13,4 +13,9 @@ public interface CommentService {
     void createCommentToPostById(Long postId, CommentDetailsDto commentDetailsDto);
 
     Long deleteCommentById(Long commentId);
+
+    boolean checkIfDeleteOwnComment(Long commentId,
+                                 String nickname);
+
+    Long getPostIdByCommentId(Long commentId);
 }

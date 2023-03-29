@@ -37,7 +37,6 @@ public class CommentController {
         if (!model.containsAttribute("commentDetailsDto")) {
             model.addAttribute("commentDetailsDto", new CommentDetailsDto().setPostId(postId));
         }
-
         List<CommentDetailsViewDto> allCommentsByPostId = this.commentService.findAllCommentsByPostId(postId);
         PostDetailsViewDto postDetailsViewDtoById = this.postService.getPostDetailsViewDtoById(postId);
         model.addAttribute("allCommentsByPostId", allCommentsByPostId);
@@ -65,9 +64,16 @@ public class CommentController {
     }
 
     @DeleteMapping("/delete-comment/{commentId}")
-    public String deleteComment(@PathVariable("commentId") Long commentId) {
-
-        Long postId = this.commentService.deleteCommentById(commentId);
+    public String deleteComment(@PathVariable("commentId") Long commentId,
+                                @AuthenticationPrincipal
+                                AppUserDetails appUserDetails) {
+        boolean isOwner = this.commentService.checkIfDeleteOwnComment(commentId, appUserDetails.getNickname());
+        Long postId;
+        if (isOwner) {
+            postId = this.commentService.deleteCommentById(commentId);
+        } else {
+            postId = this.commentService.getPostIdByCommentId(commentId);
+        }
         return "redirect:/users/comments/to-post/" + postId;
     }
 }

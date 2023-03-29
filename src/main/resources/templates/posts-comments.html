@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <th:block th:insert="~{/fragments/head}"></th:block>
     <title>Post comments</title>
@@ -24,6 +25,7 @@
         </div>
         <div class="card-header">
             <h4 th:text="${allCommentsByPostId.size() > 0} ? 'Comments' : 'Write a comment'">Comments</h4>
+            <p th:if="${isOwner}">You are trying to delete a comment that was not created by you!</p>
         </div>
 
         <div class="container">
@@ -39,7 +41,7 @@
                 <form
                         th:action="@{/users/comments/delete-comment/{commentId}(commentId=${comment.id})}"
                         th:method="delete">
-                    <button class="btn btn-admin-delete opacity-75" type="submit">Delete comment</button>
+                    <button class="btn btn-sm btn-admin-delete opacity-75" type="submit">Delete comment</button>
                 </form>
                 <hr>
             </ul>
