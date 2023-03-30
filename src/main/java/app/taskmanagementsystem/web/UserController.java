@@ -23,8 +23,8 @@ public class UserController {
     public String getProfile(@AuthenticationPrincipal
                              AppUserDetails appUserDetails,
                              Model model) {
-        UserDetailsViewDto userView = this.userService.getUserViewProfileByEmail(appUserDetails.getUsername());
-        model.addAttribute("userProfile", userView);
+        UserDetailsViewDto userDetailsViewDtoByEmail = this.userService.getUserDetailsViewDtoByEmail(appUserDetails.getUsername());
+        model.addAttribute("userProfile", userDetailsViewDtoByEmail);
         return "user-profile";
     }
 }

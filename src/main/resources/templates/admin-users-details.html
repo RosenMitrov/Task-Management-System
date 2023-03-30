@@ -14,7 +14,7 @@
 <main>
     <div
             class="container mytbodyconfig w-50"
-            th:object="${userAdminDetailsViewDto}"
+            th:object="${userDetailsViewDto}"
     >
         <table
                 class="table table-bordered table-responsive"
@@ -60,7 +60,7 @@
             </tr>
             <tr class="mytrowconfig">
                 <th>Is enabled</th>
-                <td th:text="(${userAdminDetailsViewDto.enabled}==${true}?${'YES'}:${'NO'})">YES/NO</td>
+                <td th:text="(${userDetailsViewDto.enabled}==${true}?${'YES'}:${'NO'})">YES/NO</td>
             </tr>
             <tr class="mytrowconfig">
                 <th>Department</th>

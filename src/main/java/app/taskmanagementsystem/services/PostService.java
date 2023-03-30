@@ -12,9 +12,9 @@ public interface PostService {
 
     PostEntity getPostEntityById(long postId);
 
-    List<PostDetailsViewDto> findAllPostsByTaskId(Long taskId);
+    List<PostDetailsViewDto> findAllPostDetailsViewsByTaskId(Long taskId);
 
     PostDetailsViewDto createNewPost(PostAddDto postAddDto, String username);
 
-    PostDetailsViewDto getPostDetailsViewDtoById(Long postId);
+    PostDetailsViewDto getPostDetailsViewDtoByPostId(Long postId);
 }

@@ -82,7 +82,7 @@ public class UserServiceImpl implements UserService, DbInit {
                 );
 
         this.userRepository.saveAndFlush(userEntityToBeSaved);
-        this.departmentService.incrementDepartmentCount(departmentByTypeEnum);
+        this.departmentService.incrementUsersCountInDepartment(departmentByTypeEnum);
 
         this.emailService.sendRegistrationEmail(userEntityToBeSaved.getEmail(), userEntityToBeSaved.getFirstName());
         return true;
@@ -103,27 +103,27 @@ public class UserServiceImpl implements UserService, DbInit {
 
     @Override
     @Transactional
-    public List<UserBasicViewDto> findAllBasicViewUsers() {
+    public List<UserBasicViewDto> findAllUserBasicViewsDto() {
         return this.userRepository.findAll()
                 .stream()
-                .map(this::mapEntityToBasicView)
+                .map(this::fromUserEntityToUserBasicViewDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     @Transactional
     public UserDetailsViewDto getUserDetailsViewByUserId(Long userId) {
-        Optional<UserEntity> userById = this.userRepository.findById(userId);
-        if (userById.isEmpty()) {
+        Optional<UserEntity> optionalUser = this.userRepository.findById(userId);
+        if (optionalUser.isEmpty()) {
             throw new ObjNotFoundException();
         }
-        return mapEntityToDetailsView(userById.get());
+        return mapUserEntityToUserDetailsViewDto(optionalUser.get());
     }
 
     @Override
     @Transactional
-    public boolean deleteUserEntityById(Long userId,
-                                     String email) {
+    public boolean deleteUserEntityByUserId(Long userId,
+                                            String email) {
         Optional<UserEntity> optionalUserInSession = this.userRepository.findFirstByEmail(email);
         if (optionalUserInSession.isEmpty()) {
             throw new ObjNotFoundException();
@@ -141,7 +141,7 @@ public class UserServiceImpl implements UserService, DbInit {
         }
         userToBeRemoved.removeUserFromAllTasks(userToBeRemoved);
         DepartmentEntity department = userToBeRemoved.getDepartment();
-        this.departmentService.decrementDepartmentCount(department);
+        this.departmentService.decrementUsersCountInDepartment(department);
         this.userRepository.deleteById(userId);
         return true;
     }
@@ -157,12 +157,12 @@ public class UserServiceImpl implements UserService, DbInit {
         final UserEntity userToBeUpdated = optionalUser.get();
 
         final DepartmentEntity oldDepartment = userToBeUpdated.getDepartment();
-        this.departmentService.decrementDepartmentCount(oldDepartment);
+        this.departmentService.decrementUsersCountInDepartment(oldDepartment);
 
         final DepartmentEntity departmentToBeSet = this.departmentService.getDepartmentEntityByTypeEnum(userDetailsViewDto.getDepartment());
         userToBeUpdated.setDepartment(departmentToBeSet);
 
-        this.departmentService.incrementDepartmentCount(departmentToBeSet);
+        this.departmentService.incrementUsersCountInDepartment(departmentToBeSet);
 
         this.userRepository.saveAndFlush(userToBeUpdated);
     }
@@ -175,15 +175,12 @@ public class UserServiceImpl implements UserService, DbInit {
             throw new ObjNotFoundException();
         }
 
-        List<UserRoleEntity> rolesToBeSet = new ArrayList<>();
+        List<UserRoleEntity> rolesToBeSet;
         switch (role) {
             case ADMIN -> rolesToBeSet = this.userRoleService.getAdminRoles();
             case MODERATOR -> rolesToBeSet = this.userRoleService.getModeratorRoles();
             case USER -> rolesToBeSet = this.userRoleService.getUserRoles();
-            default -> {
-                // TODO: 3/19/2023 think about exception
-            }
-
+            default -> throw new ObjNotFoundException();
         }
 
         UserEntity userToBeUpdatedWithNewRoles = optionalUser.get();
@@ -195,7 +192,6 @@ public class UserServiceImpl implements UserService, DbInit {
     public List<UserBasicRestViewDto> findAllUsersRestViewsRoleId(Long roleId) {
         Optional<List<UserEntity>> allUsersByRoleId = this.userRepository.findAllByRole_id(roleId);
         if (allUsersByRoleId.isEmpty()) {
-            // TODO: 3/21/2023 think about exception
             return new ArrayList<>();
         }
         return allUsersByRoleId
@@ -207,9 +203,9 @@ public class UserServiceImpl implements UserService, DbInit {
 
     @Override
     @Transactional
-    public UserDetailsViewDto getUserViewProfileByEmail(String email) {
+    public UserDetailsViewDto getUserDetailsViewDtoByEmail(String email) {
         UserEntity userEntityByEmail = getUserEntityByEmail(email);
-        return mapEntityToDetailsView(userEntityByEmail);
+        return mapUserEntityToUserDetailsViewDto(userEntityByEmail);
     }
 
     @Override
@@ -222,12 +218,12 @@ public class UserServiceImpl implements UserService, DbInit {
                 .setDepartment(userEntity.getDepartment().getDepartmentName().name());
     }
 
-    private UserDetailsViewDto mapEntityToDetailsView(UserEntity userEntity) {
+    private UserDetailsViewDto mapUserEntityToUserDetailsViewDto(UserEntity userEntity) {
         return this.modelMapper
                 .map(userEntity, UserDetailsViewDto.class);
     }
 
-    private UserBasicViewDto mapEntityToBasicView(UserEntity userEntity) {
+    private UserBasicViewDto fromUserEntityToUserBasicViewDto(UserEntity userEntity) {
         return this.modelMapper
                 .map(userEntity, UserBasicViewDto.class);
     }
@@ -282,9 +278,9 @@ public class UserServiceImpl implements UserService, DbInit {
                         .setPassword(this.passwordEncoder.encode("123"))
         ));
 
-        this.departmentService.incrementDepartmentCount(backEndDepartment);
-        this.departmentService.incrementDepartmentCount(frontEndDepartment);
-        this.departmentService.incrementDepartmentCount(testDevelopmentDepartment);
+        this.departmentService.incrementUsersCountInDepartment(backEndDepartment);
+        this.departmentService.incrementUsersCountInDepartment(frontEndDepartment);
+        this.departmentService.incrementUsersCountInDepartment(testDevelopmentDepartment);
 
 
         this.userRepository.saveAllAndFlush(allUsersTobeSaved);

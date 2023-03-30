@@ -51,11 +51,9 @@ public class TaskController {
 
     @GetMapping("/add-task")
     public String addTask(Model model) {
-
         if (!model.containsAttribute("taskAddDto")) {
             model.addAttribute("taskAddDto", new TaskAddDto());
         }
-
         return "tasks-add";
     }
 
@@ -78,7 +76,6 @@ public class TaskController {
         }
 
         this.taskService.createTask(taskAddDto, appUserDetails.getNickname());
-
         return "redirect:/users/tasks/all";
     }
 

@@ -19,11 +19,11 @@ public interface UserService {
 
     UserEntity getUserEntityByEmail(String email);
 
-    List<UserBasicViewDto> findAllBasicViewUsers();
+    List<UserBasicViewDto> findAllUserBasicViewsDto();
 
     UserDetailsViewDto getUserDetailsViewByUserId(Long userId);
 
-    boolean deleteUserEntityById(Long userId, String email);
+    boolean deleteUserEntityByUserId(Long userId, String email);
 
     void updateUser(Long userId,
                     UserDetailsViewDto userDetailsViewDto);
@@ -34,7 +34,7 @@ public interface UserService {
 
     List<UserBasicRestViewDto> findAllUsersRestViewsRoleId(Long roleId);
 
-    UserDetailsViewDto getUserViewProfileByEmail(String email);
+    UserDetailsViewDto getUserDetailsViewDtoByEmail(String email);
 
     void updatePassword(UserEntity userEntityByEmail);
 }

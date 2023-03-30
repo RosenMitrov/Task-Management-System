@@ -34,7 +34,9 @@ public class CredentialServiceImpl implements CredentialService {
 
     @Override
     public boolean checkIfPasswordsMatch(UserChangePasswordDto userChangePasswordDto) {
-        return userChangePasswordDto.getNewPassword().equals(userChangePasswordDto.getConfirmNewPassword());
+        return userChangePasswordDto
+                .getNewPassword()
+                .equals(userChangePasswordDto.getConfirmNewPassword());
     }
 
     @Override

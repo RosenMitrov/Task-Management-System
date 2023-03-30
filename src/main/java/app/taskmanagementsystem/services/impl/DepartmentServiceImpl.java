@@ -1,6 +1,6 @@
 package app.taskmanagementsystem.services.impl;
 
-import app.taskmanagementsystem.domain.dto.view.DepartmentAdminViewDto;
+import app.taskmanagementsystem.domain.dto.view.DepartmentViewDto;
 import app.taskmanagementsystem.domain.entity.DepartmentEntity;
 import app.taskmanagementsystem.domain.entity.enums.DepartmentTypeEnum;
 import app.taskmanagementsystem.domain.exception.ObjNotFoundException;
@@ -54,47 +54,43 @@ public class DepartmentServiceImpl implements DepartmentService, DbInit {
     }
 
     @Override
-    public void incrementDepartmentCount(DepartmentEntity department) {
+    public void incrementUsersCountInDepartment(DepartmentEntity department) {
         int currentCount = department.getCount();
         currentCount++;
-        department.setCount(currentCount);
-        this.departmentRepository.saveAndFlush(department);
+        updateDepartmentCountInDB(department, currentCount);
     }
 
     @Override
-    public void decrementDepartmentCount(DepartmentEntity department) {
+    public void decrementUsersCountInDepartment(DepartmentEntity department) {
         int currentCount = department.getCount();
         currentCount--;
-        department.setCount(currentCount);
-        this.departmentRepository.saveAndFlush(department);
+        updateDepartmentCountInDB(department, currentCount);
     }
 
     @Override
     @Transactional
-    public List<DepartmentAdminViewDto> findAllDepartmentsAdminViews() {
+    public List<DepartmentViewDto> findAllDepartmentViews() {
         return this.departmentRepository
                 .findAll()
                 .stream()
-                .map(this::fromEntityToDepartmentAdminViewDto)
+                .map(this::fromDepartmentEntityToDepartmentViewDto)
                 .toList();
-
     }
 
     @Override
     @Transactional
-    public DepartmentAdminViewDto getDepartmentAdminDetailsViewDtoById(Long departmentId) {
-        Optional<DepartmentEntity> optionalDepartmentById = this.departmentRepository.findById(departmentId);
-
-        if (optionalDepartmentById.isEmpty()) {
+    public DepartmentViewDto getDepartmentDetailsViewByDepartmentId(Long departmentId) {
+        Optional<DepartmentEntity> optionalDepartment = this.departmentRepository.findById(departmentId);
+        if (optionalDepartment.isEmpty()) {
             throw new ObjNotFoundException();
         }
-        return fromEntityToDepartmentAdminViewDto(
-                optionalDepartmentById.get()
+        return fromDepartmentEntityToDepartmentViewDto(
+                optionalDepartment.get()
         );
     }
 
-    private DepartmentAdminViewDto fromEntityToDepartmentAdminViewDto(DepartmentEntity department) {
-        return this.modelMapper.map(department, DepartmentAdminViewDto.class);
+    private DepartmentViewDto fromDepartmentEntityToDepartmentViewDto(DepartmentEntity department) {
+        return this.modelMapper.map(department, DepartmentViewDto.class);
     }
 
     private DepartmentEntity fromTypeNumToDepartmentEntity(DepartmentTypeEnum department) {
@@ -102,5 +98,11 @@ public class DepartmentServiceImpl implements DepartmentService, DbInit {
                 .setDepartmentName(department)
                 .setDescription("Some basic information about " + department.name())
                 .setCount(0);
+    }
+
+    private void updateDepartmentCountInDB(DepartmentEntity department,
+                                           int newCountToBeSet) {
+        department.setCount(newCountToBeSet);
+        this.departmentRepository.saveAndFlush(department);
     }
 }

@@ -35,11 +35,12 @@ public class CommentController {
     public String getCommentsByPostId(@PathVariable("postId") Long postId,
                                       Model model) {
         if (!model.containsAttribute("commentDetailsDto")) {
-            model.addAttribute("commentDetailsDto", new CommentDetailsDto().setPostId(postId));
+            model.addAttribute("commentDetailsDto", new CommentDetailsDto()
+                    .setPostId(postId));
         }
-        List<CommentDetailsViewDto> allCommentsByPostId = this.commentService.findAllCommentsByPostId(postId);
-        PostDetailsViewDto postDetailsViewDtoById = this.postService.getPostDetailsViewDtoById(postId);
-        model.addAttribute("allCommentsByPostId", allCommentsByPostId);
+        List<CommentDetailsViewDto> allCommentsDetailsViewByPostId = this.commentService.findAllCommentsDetailsViewByPostId(postId);
+        PostDetailsViewDto postDetailsViewDtoById = this.postService.getPostDetailsViewDtoByPostId(postId);
+        model.addAttribute("allCommentsByPostId", allCommentsDetailsViewByPostId);
         model.addAttribute("postDetailsViewDtoById", postDetailsViewDtoById);
         return "posts-comments";
     }
@@ -53,13 +54,12 @@ public class CommentController {
                                       AppUserDetails appUserDetails) {
 
         if (bindingResult.hasErrors()) {
-
             redirectAttributes.addFlashAttribute("commentDetailsViewDto", commentDetailsDto);
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.commentDetailsDto", bindingResult);
             return "redirect:/users/comments/to-post/" + postId;
         }
 
-        this.commentService.createCommentToPostById(postId, commentDetailsDto.setCreatorName(appUserDetails.getNickname()));
+        this.commentService.createCommentToPostByPostId(postId, commentDetailsDto.setCreatorName(appUserDetails.getNickname()));
         return "redirect:/users/comments/to-post/" + postId;
     }
 

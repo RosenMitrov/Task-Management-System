@@ -8,9 +8,9 @@ import java.util.List;
 public interface CommentService {
     void commentsInitialization();
 
-    List<CommentDetailsViewDto> findAllCommentsByPostId(Long postId);
+    List<CommentDetailsViewDto> findAllCommentsDetailsViewByPostId(Long postId);
 
-    void createCommentToPostById(Long postId, CommentDetailsDto commentDetailsDto);
+    void createCommentToPostByPostId(Long postId, CommentDetailsDto commentDetailsDto);
 
     Long deleteCommentById(Long commentId);
 

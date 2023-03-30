@@ -89,7 +89,7 @@ public class CommentServiceImpl implements CommentService, DbInit {
     }
 
     @Override
-    public List<CommentDetailsViewDto> findAllCommentsByPostId(Long postId) {
+    public List<CommentDetailsViewDto> findAllCommentsDetailsViewByPostId(Long postId) {
         List<CommentEntity> allCommentsByPostId = this.commentRepository.findAllByPost_Id(postId);
         return allCommentsByPostId
                 .stream()
@@ -98,9 +98,9 @@ public class CommentServiceImpl implements CommentService, DbInit {
     }
 
     @Override
-    public void createCommentToPostById(Long postId,
-                                        CommentDetailsDto commentDetailsDto) {
-        CommentEntity commentToBeSaved = this.modelMapper.map(commentDetailsDto, CommentEntity.class);
+    public void createCommentToPostByPostId(Long postId,
+                                            CommentDetailsDto commentDetailsDto) {
+        CommentEntity commentToBeSaved = fromCommentDetailsDtoToCommentEntity(commentDetailsDto);
         commentToBeSaved.setCreatedDate(LocalDateTime.now());
         this.commentRepository.saveAndFlush(commentToBeSaved);
     }
@@ -124,7 +124,9 @@ public class CommentServiceImpl implements CommentService, DbInit {
     @Override
     public Long getPostIdByCommentId(Long commentId) {
         CommentEntity commentEntity = getCommentById(commentId);
-        return commentEntity.getPost().getId();
+        return commentEntity
+                .getPost()
+                .getId();
     }
 
     private CommentEntity getCommentById(Long commentId) {
@@ -138,5 +140,9 @@ public class CommentServiceImpl implements CommentService, DbInit {
     private CommentDetailsViewDto fromCommentEntityToCommentDetailsView(CommentEntity commentEntity) {
         return this.modelMapper
                 .map(commentEntity, CommentDetailsViewDto.class);
+    }
+
+    private CommentEntity fromCommentDetailsDtoToCommentEntity(CommentDetailsDto commentDetailsDto) {
+        return this.modelMapper.map(commentDetailsDto, CommentEntity.class);
     }
 }

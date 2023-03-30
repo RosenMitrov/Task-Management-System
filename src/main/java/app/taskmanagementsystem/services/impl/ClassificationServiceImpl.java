@@ -2,6 +2,7 @@ package app.taskmanagementsystem.services.impl;
 
 import app.taskmanagementsystem.domain.entity.ClassificationEntity;
 import app.taskmanagementsystem.domain.entity.enums.ClassificationTypeEnum;
+import app.taskmanagementsystem.domain.exception.ObjNotFoundException;
 import app.taskmanagementsystem.init.DbInit;
 import app.taskmanagementsystem.repositories.ClassificationRepository;
 import app.taskmanagementsystem.services.ClassificationService;
@@ -47,8 +48,7 @@ public class ClassificationServiceImpl implements ClassificationService, DbInit 
     public ClassificationEntity getClassificationEntityById(long classificationId) {
         Optional<ClassificationEntity> classificationRepositoryById = this.classificationRepository.findById(classificationId);
         if (classificationRepositoryById.isEmpty()) {
-            // TODO: 3/14/2023 think about exception
-            return null;
+            throw new ObjNotFoundException();
         }
         return classificationRepositoryById.get();
     }
@@ -57,8 +57,7 @@ public class ClassificationServiceImpl implements ClassificationService, DbInit 
     public ClassificationEntity getClassificationByEnumType(ClassificationTypeEnum classification) {
         Optional<ClassificationEntity> optionalClassificationEntity = this.classificationRepository.findFirstByClassification(classification);
         if (optionalClassificationEntity.isEmpty()) {
-            // TODO: 3/19/2023 think about exception!
-            return null;
+            throw new ObjNotFoundException();
         }
         return optionalClassificationEntity.get();
     }

@@ -2,6 +2,8 @@ package app.taskmanagementsystem.services.impl;
 
 import app.taskmanagementsystem.domain.dto.model.TaskAddDto;
 import app.taskmanagementsystem.domain.dto.view.TaskDetailsViewDto;
+import app.taskmanagementsystem.domain.dto.view.UserBasicViewDto;
+import app.taskmanagementsystem.domain.entity.ProgressEntity;
 import app.taskmanagementsystem.domain.entity.TaskEntity;
 import app.taskmanagementsystem.domain.entity.UserEntity;
 import app.taskmanagementsystem.domain.exception.ObjNotFoundException;
@@ -19,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static app.taskmanagementsystem.domain.entity.enums.ProgressTypeEnum.*;
@@ -103,13 +106,13 @@ public class TaskServiceImpl implements TaskService, DbInit {
     }
 
     @Override
-    public TaskEntity getTaskEntityById(long taskId) {
-        Optional<TaskEntity> taskRepositoryById = this.taskRepository.findById(taskId);
+    public TaskEntity getTaskEntityByTaskId(long taskId) {
+        Optional<TaskEntity> optionalTask = this.taskRepository.findById(taskId);
 
-        if (taskRepositoryById.isEmpty()) {
-           throw new ObjNotFoundException();
+        if (optionalTask.isEmpty()) {
+            throw new ObjNotFoundException();
         }
-        return taskRepositoryById.get();
+        return optionalTask.get();
     }
 
     @Override
@@ -118,22 +121,35 @@ public class TaskServiceImpl implements TaskService, DbInit {
         List<TaskEntity> allTaskEntities = this.taskRepository.findAll();
         return allTaskEntities
                 .stream()
-                .map(taskEntity -> fromTaskEntityToDetailsView(taskEntity, sessionUserEmail))
+                .map(taskEntity -> fromTaskEntityAndUserEmailToDetailsView(taskEntity, sessionUserEmail))
                 .collect(Collectors.toList());
     }
 
-    private TaskDetailsViewDto fromTaskEntityToDetailsView(TaskEntity taskEntity,
-                                                           String sessionUserEmail) {
+    private TaskDetailsViewDto fromTaskEntityAndUserEmailToDetailsView(TaskEntity taskEntity,
+                                                                       String sessionUserEmail) {
         TaskDetailsViewDto mapped = fromTaskEntityToDetailsView(taskEntity);
-        return mapped.setAssignedUserInSession(mapped
-                .getAssignedUsers()
-                .stream()
-                .anyMatch(userBasicViewDto -> userBasicViewDto.getEmail().equals(sessionUserEmail)));
+        return mapped
+                .setAssignedUserInSession(mapped
+                        .getAssignedUsers()
+                        .stream()
+                        .anyMatch(
+                                isUserInSessionAssignedToTask(sessionUserEmail)
+                        ));
+    }
+
+    private static Predicate<UserBasicViewDto> isUserInSessionAssignedToTask(String sessionUserEmail) {
+        return userBasicViewDto -> userBasicViewDto
+                .getEmail()
+                .equals(sessionUserEmail);
+    }
+
+    private TaskDetailsViewDto fromTaskEntityToDetailsView(TaskEntity taskEntity) {
+        return this.modelMapper.map(taskEntity, TaskDetailsViewDto.class);
     }
 
     @Override
     @Transactional
-    public TaskDetailsViewDto getTaskDetailsViewById(Long taskId) {
+    public TaskDetailsViewDto getTaskDetailsViewByTaskId(Long taskId) {
         Optional<TaskEntity> taskEntityById = this.taskRepository.findById(taskId);
         if (taskEntityById.isEmpty()) {
             throw new ObjNotFoundException();
@@ -146,8 +162,14 @@ public class TaskServiceImpl implements TaskService, DbInit {
                            String creatorUsername) {
         TaskEntity taskTobeSaved = this.modelMapper.map(taskAddDto, TaskEntity.class);
         taskTobeSaved
-                .setProgress(this.progressService.getProgressEntityByType(OPEN))
-                .setClassification(this.classificationService.getClassificationByEnumType(taskAddDto.getClassification()))
+                .setProgress(
+                        this.progressService
+                                .getProgressEntityByType(OPEN)
+                )
+                .setClassification(
+                        this.classificationService
+                                .getClassificationByEnumType(taskAddDto.getClassification())
+                )
                 .setCreatorName(creatorUsername)
                 .setStartDate(LocalDateTime.now())
                 .setDueDate(LocalDateTime.now().plusWeeks(2));
@@ -162,17 +184,20 @@ public class TaskServiceImpl implements TaskService, DbInit {
         if (optionalTask.isEmpty()) {
             throw new ObjNotFoundException();
         }
-        TaskEntity taskEntity = optionalTask.get();
-        if (taskEntity.getProgress().getProgress() == OPEN) {
-            taskEntity.setProgress(this.progressService.getProgressEntityByType(IN_PROGRESS));
+
+        TaskEntity taskToBeUpdated = optionalTask.get();
+        ProgressEntity taskProgressType = taskToBeUpdated.getProgress();
+
+        if (taskProgressType.getProgress() == OPEN) {
+            taskToBeUpdated.setProgress(this.progressService.getProgressEntityByType(IN_PROGRESS));
         }
-        if (taskEntity.getProgress().getProgress() == COMPLETED) {
-            taskEntity.setProgress(this.progressService.getProgressEntityByType(RE_OPEN));
+        if (taskProgressType.getProgress() == COMPLETED) {
+            taskToBeUpdated.setProgress(this.progressService.getProgressEntityByType(RE_OPEN));
         }
         UserEntity userToBeAddedToTask = this.userService.getUserEntityByEmail(email);
-        taskEntity.addUserToTask(userToBeAddedToTask);
+        taskToBeUpdated.addUserToTask(userToBeAddedToTask);
 
-        this.taskRepository.saveAndFlush(taskEntity);
+        this.taskRepository.saveAndFlush(taskToBeUpdated);
     }
 
     @Override
@@ -181,15 +206,20 @@ public class TaskServiceImpl implements TaskService, DbInit {
                                        String email) {
         Optional<TaskEntity> optionalTask = this.taskRepository.findById(taskId);
         if (optionalTask.isEmpty()) {
-            return;
+            throw new ObjNotFoundException();
         }
-        TaskEntity taskEntity = optionalTask.get();
-        UserEntity userToBeDetached = this.userService.getUserEntityByEmail(email);
-        taskEntity.removeUserFromTask(userToBeDetached);
-        if (taskEntity.getCountOfAssignedUsers() == 0) {
-            taskEntity.setProgress(this.progressService.getProgressEntityByType(COMPLETED));
+        TaskEntity taskToBeUpdated = optionalTask.get();
+        UserEntity userToBeRemovedFromTask = this.userService.getUserEntityByEmail(email);
+        taskToBeUpdated.removeUserFromTask(userToBeRemovedFromTask);
+
+        if (taskToBeUpdated.getCountOfAssignedUsers() == 0) {
+            taskToBeUpdated.setProgress(this.progressService.getProgressEntityByType(COMPLETED));
         }
-        this.taskRepository.saveAndFlush(taskEntity);
+        saveTask(taskToBeUpdated);
+    }
+
+    private void saveTask(TaskEntity taskToBeUpdated) {
+        this.taskRepository.saveAndFlush(taskToBeUpdated);
     }
 
     @Override
@@ -219,7 +249,4 @@ public class TaskServiceImpl implements TaskService, DbInit {
     }
 
 
-    private TaskDetailsViewDto fromTaskEntityToDetailsView(TaskEntity taskEntity) {
-        return this.modelMapper.map(taskEntity, TaskDetailsViewDto.class);
-    }
 }

@@ -31,7 +31,7 @@
                 </thead>
                 <tbody class="text-center">
                 <tr class="mytrowconfig"
-                    th:each="department : ${allDepartmentsAdminViews}"
+                    th:each="department : ${allDepartmentViews}"
                     th:object="${department}"
                 >
                     <td th:text="*{id}">1</td>

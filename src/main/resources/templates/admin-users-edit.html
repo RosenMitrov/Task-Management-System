@@ -18,7 +18,7 @@
 <main>
     <div
             class="container my-margin-top"
-            th:object="${userById}"
+            th:object="${userDetailsViewDto}"
     >
 
         <form th:action="@{/admin/user-edit/{userId}(userId=*{id})}"
@@ -153,7 +153,7 @@
                 th:method="patch">
             <div
                     class="row mt-2 pb-4 d-flex justify-content-lg-evenly myrow-config mt-0"
-                    th:object="${userById}"
+                    th:object="${userDetailsViewDto}"
             >
                 <h3>Change roles:</h3>
                 <p></p>
@@ -221,7 +221,7 @@
 
         <div
                 class="row mt-2 pb-4 d-flex justify-content-lg-evenly myrow-config mt-0"
-                th:object="${userById}"
+                th:object="${userDetailsViewDto}"
         >
             <h3>Additional information:</h3>
             <span class="table-group-divider mb-3"></span>

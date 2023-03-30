@@ -54,19 +54,19 @@ public class PostServiceImpl implements PostService, DbInit {
                         .setTitle("POST 1")
                         .setCreatedDate(LocalDateTime.now())
                         .setCreatorName(this.userService.getUserEntityByEmail("admin@adminov.bg").getUsername())
-                        .setTask(this.taskService.getTaskEntityById(3L))
+                        .setTask(this.taskService.getTaskEntityByTaskId(3L))
                         .setInformation("Some basic information related to post 1"),
                 new PostEntity()
                         .setTitle("POST 2")
                         .setCreatedDate(LocalDateTime.now())
                         .setCreatorName(this.userService.getUserEntityByEmail("moderator@moderatorov.bg").getUsername())
-                        .setTask(this.taskService.getTaskEntityById(2L))
+                        .setTask(this.taskService.getTaskEntityByTaskId(2L))
                         .setInformation("Information related to post 2"),
                 new PostEntity()
                         .setTitle("POST 3")
                         .setCreatedDate(LocalDateTime.now())
                         .setCreatorName(this.userService.getUserEntityByEmail("user@userov.bg").getUsername())
-                        .setTask(this.taskService.getTaskEntityById(1L))
+                        .setTask(this.taskService.getTaskEntityByTaskId(1L))
                         .setInformation("Description related to post 3")
         );
 
@@ -86,7 +86,7 @@ public class PostServiceImpl implements PostService, DbInit {
 
     @Override
     @Transactional
-    public List<PostDetailsViewDto> findAllPostsByTaskId(Long taskId) {
+    public List<PostDetailsViewDto> findAllPostDetailsViewsByTaskId(Long taskId) {
         List<PostEntity> optionalPostsByTaskId = this.postRepository.findAllByTask_Id(taskId);
 
         return optionalPostsByTaskId
@@ -98,31 +98,27 @@ public class PostServiceImpl implements PostService, DbInit {
     @Override
     public PostDetailsViewDto createNewPost(PostAddDto postAddDto,
                                             String username) {
-        TaskEntity taskEntityById = this.taskService.getTaskEntityById(postAddDto.getTaskId());
+        TaskEntity taskEntityById = this.taskService.getTaskEntityByTaskId(postAddDto.getTaskId());
 
-        PostEntity newPostEntity = new PostEntity()
+        PostEntity newPostEntityToBeSaved = new PostEntity()
                 .setTitle(postAddDto.getTitle())
                 .setInformation(postAddDto.getInformation())
                 .setTask(taskEntityById)
                 .setCreatorName(username)
                 .setCreatedDate(LocalDateTime.now());
 
-        PostEntity createdPost = this.postRepository.saveAndFlush(newPostEntity);
+        PostEntity createdPost = this.postRepository.saveAndFlush(newPostEntityToBeSaved);
 
-        return this.modelMapper.map(createdPost, PostDetailsViewDto.class);
-
-
+        return fromPostEntityToPostDetailsView(createdPost);
     }
 
     @Override
     @Transactional
-    public PostDetailsViewDto getPostDetailsViewDtoById(Long postId) {
-
+    public PostDetailsViewDto getPostDetailsViewDtoByPostId(Long postId) {
         Optional<PostEntity> optionalPost = this.postRepository.findById(postId);
         if (optionalPost.isEmpty()) {
             throw new ObjNotFoundException();
         }
-
         return fromPostEntityToPostDetailsView(optionalPost.get());
     }
 

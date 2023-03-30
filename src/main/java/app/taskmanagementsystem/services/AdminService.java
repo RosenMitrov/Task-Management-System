@@ -1,6 +1,6 @@
 package app.taskmanagementsystem.services;
 
-import app.taskmanagementsystem.domain.dto.view.DepartmentAdminViewDto;
+import app.taskmanagementsystem.domain.dto.view.DepartmentViewDto;
 import app.taskmanagementsystem.domain.dto.view.UserBasicViewDto;
 import app.taskmanagementsystem.domain.dto.view.UserDetailsViewDto;
 import app.taskmanagementsystem.domain.entity.enums.RoleTypeEnum;
@@ -8,15 +8,15 @@ import app.taskmanagementsystem.domain.entity.enums.RoleTypeEnum;
 import java.util.List;
 
 public interface AdminService {
-    List<UserBasicViewDto> findAllUserAdminBasicViewsDto();
+    List<UserBasicViewDto> findAllUserBasicViewsDto();
 
-    UserDetailsViewDto getUserAdminDetailsViewDto(Long userId);
+    UserDetailsViewDto getUserDetailsViewDtoByUserId(Long userId);
 
-    boolean deleteUserEntityById(Long userId, String email);
+    boolean deleteUserEntityByUserId(Long userId, String email);
 
-    List<DepartmentAdminViewDto> findAllDepartmentsAdminViews();
+    List<DepartmentViewDto> findAllDepartmentViews();
 
-    DepartmentAdminViewDto getDepartmentAdminDetailsViewDtoById(Long departmentId);
+    DepartmentViewDto getDepartmentDetailsViewByDepartmentId(Long departmentId);
 
     void updateUser(Long userId,
                     UserDetailsViewDto userDetailsViewDto);

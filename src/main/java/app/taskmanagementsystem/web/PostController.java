@@ -2,6 +2,7 @@ package app.taskmanagementsystem.web;
 
 import app.taskmanagementsystem.domain.dto.model.PostAddDto;
 import app.taskmanagementsystem.domain.dto.view.PostDetailsViewDto;
+import app.taskmanagementsystem.domain.dto.view.TaskDetailsViewDto;
 import app.taskmanagementsystem.security.AppUserDetails;
 import app.taskmanagementsystem.services.PostService;
 import app.taskmanagementsystem.services.TaskService;
@@ -37,9 +38,10 @@ public class PostController {
     @GetMapping("/related-to-task-id/{taskId}")
     public String getTasksPosts(@PathVariable("taskId") Long taskId,
                                 Model model) {
-        List<PostDetailsViewDto> allPostsByTaskId = this.postService.findAllPostsByTaskId(taskId);
+        List<PostDetailsViewDto> allPostsByTaskId = this.postService.findAllPostDetailsViewsByTaskId(taskId);
         model.addAttribute("allPostsByTaskId", allPostsByTaskId);
-        model.addAttribute("taskView", this.taskService.getTaskDetailsViewById(taskId));
+        TaskDetailsViewDto taskDetailsViewByTaskId = this.taskService.getTaskDetailsViewByTaskId(taskId);
+        model.addAttribute("taskView", taskDetailsViewByTaskId);
         return "posts-all";
     }
 

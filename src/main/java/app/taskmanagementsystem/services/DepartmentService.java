@@ -1,6 +1,6 @@
 package app.taskmanagementsystem.services;
 
-import app.taskmanagementsystem.domain.dto.view.DepartmentAdminViewDto;
+import app.taskmanagementsystem.domain.dto.view.DepartmentViewDto;
 import app.taskmanagementsystem.domain.entity.DepartmentEntity;
 import app.taskmanagementsystem.domain.entity.enums.DepartmentTypeEnum;
 
@@ -12,11 +12,11 @@ public interface DepartmentService {
 
     DepartmentEntity getDepartmentEntityByTypeEnum(DepartmentTypeEnum department);
 
-    void incrementDepartmentCount(DepartmentEntity backEndDepartment);
+    void incrementUsersCountInDepartment(DepartmentEntity backEndDepartment);
 
-    void decrementDepartmentCount(DepartmentEntity department);
+    void decrementUsersCountInDepartment(DepartmentEntity department);
 
-    List<DepartmentAdminViewDto> findAllDepartmentsAdminViews();
+    List<DepartmentViewDto> findAllDepartmentViews();
 
-    DepartmentAdminViewDto getDepartmentAdminDetailsViewDtoById(Long departmentId);
+    DepartmentViewDto getDepartmentDetailsViewByDepartmentId(Long departmentId);
 }

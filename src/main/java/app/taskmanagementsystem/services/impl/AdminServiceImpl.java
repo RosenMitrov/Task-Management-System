@@ -1,6 +1,6 @@
 package app.taskmanagementsystem.services.impl;
 
-import app.taskmanagementsystem.domain.dto.view.DepartmentAdminViewDto;
+import app.taskmanagementsystem.domain.dto.view.DepartmentViewDto;
 import app.taskmanagementsystem.domain.dto.view.UserBasicViewDto;
 import app.taskmanagementsystem.domain.dto.view.UserDetailsViewDto;
 import app.taskmanagementsystem.domain.entity.enums.RoleTypeEnum;
@@ -27,36 +27,37 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public List<UserBasicViewDto> findAllUserAdminBasicViewsDto() {
-        return this.userService.findAllBasicViewUsers();
+    public List<UserBasicViewDto> findAllUserBasicViewsDto() {
+        return this.userService.findAllUserBasicViewsDto();
     }
 
     @Override
-    public UserDetailsViewDto getUserAdminDetailsViewDto(Long userId) {
-        UserDetailsViewDto userById = this.userService.getUserDetailsViewByUserId(userId);
-        String roles = userById
+    public UserDetailsViewDto getUserDetailsViewDtoByUserId(Long userId) {
+        UserDetailsViewDto userDetailsViewDto = this.userService.getUserDetailsViewByUserId(userId);
+        String roles = userDetailsViewDto
                 .getRoles()
                 .stream()
                 .map(userRoleViewAdminDto -> userRoleViewAdminDto.getRole().name())
                 .collect(Collectors.joining(", "));
 
-        userById.setShowRoles(roles);
-        return userById;
+        userDetailsViewDto.setShowRoles(roles);
+        return userDetailsViewDto;
     }
 
     @Override
-    public boolean deleteUserEntityById(Long userId, String email) {
-     return    this.userService.deleteUserEntityById(userId, email);
+    public boolean deleteUserEntityByUserId(Long userId,
+                                            String email) {
+        return this.userService.deleteUserEntityByUserId(userId, email);
     }
 
     @Override
-    public List<DepartmentAdminViewDto> findAllDepartmentsAdminViews() {
-        return this.departmentService.findAllDepartmentsAdminViews();
+    public List<DepartmentViewDto> findAllDepartmentViews() {
+        return this.departmentService.findAllDepartmentViews();
     }
 
     @Override
-    public DepartmentAdminViewDto getDepartmentAdminDetailsViewDtoById(Long departmentId) {
-      return   this.departmentService.getDepartmentAdminDetailsViewDtoById(departmentId);
+    public DepartmentViewDto getDepartmentDetailsViewByDepartmentId(Long departmentId) {
+        return this.departmentService.getDepartmentDetailsViewByDepartmentId(departmentId);
     }
 
     @Override

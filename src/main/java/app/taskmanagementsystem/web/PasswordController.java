@@ -35,7 +35,6 @@ public class PasswordController {
                     .setEmail(appUserDetails.getUsername())
                     .setFullName(appUserDetails.getFullName()));
             model.addAttribute("passNotMatch", false);
-
         }
         return "change-password";
     }

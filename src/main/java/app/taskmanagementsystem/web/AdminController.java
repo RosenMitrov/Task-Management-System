@@ -1,6 +1,6 @@
 package app.taskmanagementsystem.web;
 
-import app.taskmanagementsystem.domain.dto.view.DepartmentAdminViewDto;
+import app.taskmanagementsystem.domain.dto.view.DepartmentViewDto;
 import app.taskmanagementsystem.domain.dto.view.UserBasicViewDto;
 import app.taskmanagementsystem.domain.dto.view.UserDetailsViewDto;
 import app.taskmanagementsystem.domain.entity.enums.RoleTypeEnum;
@@ -27,8 +27,8 @@ public class AdminController {
 
     @GetMapping("/all-users")
     public String adminPanelAllUsers(Model model) {
-        final List<UserBasicViewDto> listOfAllUsers = this.adminService.findAllUserAdminBasicViewsDto();
-        model.addAttribute("listOfAllUsers", listOfAllUsers);
+        final List<UserBasicViewDto> allUserBasicViewsDto = this.adminService.findAllUserBasicViewsDto();
+        model.addAttribute("allUserBasicViewsDto", allUserBasicViewsDto);
         return "admin-users-all";
     }
 
@@ -40,16 +40,16 @@ public class AdminController {
     @GetMapping("/user-details/{userId}")
     public String adminPanelGetUserById(@PathVariable("userId") Long userId,
                                         Model model) {
-        final UserDetailsViewDto userById = this.adminService.getUserAdminDetailsViewDto(userId);
-        model.addAttribute("userAdminDetailsViewDto", userById);
+        final UserDetailsViewDto userDetailsViewDto = this.adminService.getUserDetailsViewDtoByUserId(userId);
+        model.addAttribute("userDetailsViewDto", userDetailsViewDto);
         return "admin-users-details";
     }
 
     @GetMapping("/user-edit/{userId}")
     public String edit(@PathVariable("userId") Long userId,
                        Model model) {
-        final UserDetailsViewDto userById = this.adminService.getUserAdminDetailsViewDto(userId);
-        model.addAttribute("userById", userById);
+        final UserDetailsViewDto userDetailsViewDto = this.adminService.getUserDetailsViewDtoByUserId(userId);
+        model.addAttribute("userDetailsViewDto", userDetailsViewDto);
         return "admin-users-edit";
     }
 
@@ -71,8 +71,8 @@ public class AdminController {
 
     @GetMapping("/all-departments")
     public String adminPanelAllDepartments(Model model) {
-        final List<DepartmentAdminViewDto> allDepartmentsAdminViews = this.adminService.findAllDepartmentsAdminViews();
-        model.addAttribute("allDepartmentsAdminViews", allDepartmentsAdminViews);
+        final List<DepartmentViewDto> allDepartmentViews = this.adminService.findAllDepartmentViews();
+        model.addAttribute("allDepartmentViews", allDepartmentViews);
         return "admin-departments-all";
     }
 
@@ -80,9 +80,8 @@ public class AdminController {
     @GetMapping("/department-details/{departmentId}")
     public String adminPanelDepartmentById(@PathVariable("departmentId") Long departmentId,
                                            Model model) {
-        final DepartmentAdminViewDto departmentViewDto = this.adminService
-                .getDepartmentAdminDetailsViewDtoById(departmentId);
-
+        final DepartmentViewDto departmentViewDto = this.adminService
+                .getDepartmentDetailsViewByDepartmentId(departmentId);
         model.addAttribute("departmentViewDto", departmentViewDto);
         return "admin-departments-details";
     }
@@ -94,7 +93,7 @@ public class AdminController {
                              AppUserDetails appUserDetails,
                              RedirectAttributes redirectAttributes) {
 
-        boolean isDeleted = this.adminService.deleteUserEntityById(userId, appUserDetails.getUsername());
+        boolean isDeleted = this.adminService.deleteUserEntityByUserId(userId, appUserDetails.getUsername());
         redirectAttributes.addFlashAttribute("selfDelete", !isDeleted);
         redirectAttributes.addFlashAttribute("deletedSuccessfully", isDeleted);
         return "redirect:/admin/all-users";

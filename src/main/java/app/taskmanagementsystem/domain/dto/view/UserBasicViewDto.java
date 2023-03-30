@@ -5,7 +5,7 @@ public class UserBasicViewDto {
     private String username;
     private String email;
     private int age;
-    private DepartmentAdminViewDto department;
+    private DepartmentViewDto department;
 
     public UserBasicViewDto() {
     }
@@ -37,11 +37,11 @@ public class UserBasicViewDto {
         return this;
     }
 
-    public DepartmentAdminViewDto getDepartment() {
+    public DepartmentViewDto getDepartment() {
         return department;
     }
 
-    public UserBasicViewDto setDepartment(DepartmentAdminViewDto department) {
+    public UserBasicViewDto setDepartment(DepartmentViewDto department) {
         this.department = department;
         return this;
     }

@@ -4,7 +4,7 @@ import app.taskmanagementsystem.domain.entity.enums.DepartmentTypeEnum;
 
 import java.util.List;
 
-public class DepartmentAdminViewDto {
+public class DepartmentViewDto {
 
     private Long id;
     private DepartmentTypeEnum departmentName;
@@ -12,14 +12,14 @@ public class DepartmentAdminViewDto {
     private int count;
     private List<UserBasicViewDto> users;
 
-    public DepartmentAdminViewDto() {
+    public DepartmentViewDto() {
     }
 
     public Long getId() {
         return id;
     }
 
-    public DepartmentAdminViewDto setId(Long id) {
+    public DepartmentViewDto setId(Long id) {
         this.id = id;
         return this;
     }
@@ -28,7 +28,7 @@ public class DepartmentAdminViewDto {
         return departmentName;
     }
 
-    public DepartmentAdminViewDto setDepartmentName(DepartmentTypeEnum departmentName) {
+    public DepartmentViewDto setDepartmentName(DepartmentTypeEnum departmentName) {
         this.departmentName = departmentName;
         return this;
     }
@@ -37,7 +37,7 @@ public class DepartmentAdminViewDto {
         return description;
     }
 
-    public DepartmentAdminViewDto setDescription(String description) {
+    public DepartmentViewDto setDescription(String description) {
         this.description = description;
         return this;
     }
@@ -46,7 +46,7 @@ public class DepartmentAdminViewDto {
         return count;
     }
 
-    public DepartmentAdminViewDto setCount(int count) {
+    public DepartmentViewDto setCount(int count) {
         this.count = count;
         return this;
     }
@@ -55,7 +55,7 @@ public class DepartmentAdminViewDto {
         return users;
     }
 
-    public DepartmentAdminViewDto setUsers(List<UserBasicViewDto> users) {
+    public DepartmentViewDto setUsers(List<UserBasicViewDto> users) {
         this.users = users;
         return this;
     }

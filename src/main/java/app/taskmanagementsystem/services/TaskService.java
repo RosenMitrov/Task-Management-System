@@ -10,11 +10,11 @@ import java.util.List;
 public interface TaskService {
     void taskInitialization();
 
-    TaskEntity getTaskEntityById(long taskId);
+    TaskEntity getTaskEntityByTaskId(long taskId);
 
     List<TaskDetailsViewDto> getAllTasksDetailsViews(String sessionUserEmail);
 
-    TaskDetailsViewDto getTaskDetailsViewById(Long taskId);
+    TaskDetailsViewDto getTaskDetailsViewByTaskId(Long taskId);
 
     void createTask(TaskAddDto taskAddDto, String creatorUsername);
 
