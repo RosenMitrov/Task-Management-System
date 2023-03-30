@@ -24,6 +24,9 @@ public class SecurityConfiguration {
     private static final String[] ANONYMOUS_FOLDERS = {
             "/error"
     };
+    private static final String[] ANONYMOUS_AND_AUTHENTICATED_ENDPOINTS = {
+            "/"
+    };
     private static final String[] ANONYMOUS_ENDPOINTS = {
             "/",
             "/users/login",
@@ -64,6 +67,7 @@ public class SecurityConfiguration {
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
 
                 .requestMatchers(ANONYMOUS_FOLDERS).permitAll()
+                .requestMatchers(ANONYMOUS_AND_AUTHENTICATED_ENDPOINTS).permitAll()
                 .requestMatchers(ANONYMOUS_ENDPOINTS).anonymous()
 
                 .requestMatchers(ROLE_ADMIN_ENDPOINTS).hasRole(ADMIN.name())
