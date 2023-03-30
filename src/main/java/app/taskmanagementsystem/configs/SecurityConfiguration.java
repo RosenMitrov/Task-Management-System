@@ -64,7 +64,7 @@ public class SecurityConfiguration {
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
 
                 .requestMatchers(ANONYMOUS_FOLDERS).permitAll()
-                .requestMatchers(ANONYMOUS_ENDPOINTS).permitAll()
+                .requestMatchers(ANONYMOUS_ENDPOINTS).anonymous()
 
                 .requestMatchers(ROLE_ADMIN_ENDPOINTS).hasRole(ADMIN.name())
 
