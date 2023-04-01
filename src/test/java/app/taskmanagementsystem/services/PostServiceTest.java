@@ -166,6 +166,7 @@ class PostServiceTest {
 
         Mockito.verify(mockModelMapper, Mockito.times(1))
                 .map(Mockito.any(), ArgumentMatchers.eq(PostDetailsViewDto.class));
+
         Assertions.assertEquals(postEntityTest.getTitle(), returnedView.getTitle());
         Assertions.assertEquals(postEntityTest.getCreatedDate(), returnedView.getCreatedDate());
         Assertions.assertEquals(postEntityTest.getCreatorName(), returnedView.getCreatorName());
