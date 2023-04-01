@@ -44,12 +44,11 @@ public class UserRoleServiceImpl implements UserRoleService, DbInit {
         Optional<UserRoleEntity> firstByRole = this.userRoleRepository.findFirstByRole(roleTypeEnum);
 
         if (firstByRole.isEmpty()) {
-            return null;
+            throw new ObjNotFoundException();
         }
 
         return firstByRole.get();
     }
-
 
     @Override
     public void userRolesInitialization() {
@@ -100,8 +99,6 @@ public class UserRoleServiceImpl implements UserRoleService, DbInit {
                 .collect(Collectors.toList());
     }
 
-
-
     private RoleRestViewDto fromRoleEntityToRoleView(UserRoleEntity userRoleEntity) {
         return this.modelMapper
                 .map(userRoleEntity, RoleRestViewDto.class)
@@ -111,7 +108,7 @@ public class UserRoleServiceImpl implements UserRoleService, DbInit {
     private UserRoleEntity getRoleByType(RoleTypeEnum roleTypeEnum) {
         Optional<UserRoleEntity> firstByRole = this.userRoleRepository.findFirstByRole(roleTypeEnum);
         if (firstByRole.isEmpty()) {
-           throw new ObjNotFoundException();
+            throw new ObjNotFoundException();
         }
         return firstByRole.get();
     }
@@ -121,6 +118,4 @@ public class UserRoleServiceImpl implements UserRoleService, DbInit {
                 .setRole(roleTypeEnum)
                 .setDescription("Some description about " + roleTypeEnum.name());
     }
-
-
 }
