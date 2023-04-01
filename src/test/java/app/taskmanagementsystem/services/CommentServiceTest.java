@@ -2,8 +2,8 @@ package app.taskmanagementsystem.services;
 
 import app.taskmanagementsystem.domain.dto.model.CommentDetailsDto;
 import app.taskmanagementsystem.domain.dto.view.CommentDetailsViewDto;
-import app.taskmanagementsystem.domain.entity.CommentEntity;
-import app.taskmanagementsystem.domain.entity.PostEntity;
+import app.taskmanagementsystem.domain.entity.*;
+import app.taskmanagementsystem.domain.entity.enums.RoleTypeEnum;
 import app.taskmanagementsystem.domain.exception.ObjNotFoundException;
 import app.taskmanagementsystem.repositories.CommentRepository;
 import app.taskmanagementsystem.services.impl.CommentServiceImpl;
@@ -151,7 +151,6 @@ class CommentServiceTest {
     }
 
 
-
     @Test
     void test_checkIfDeleteOwnComment_ShouldReturnFalse() {
         long commentId = 555L;
@@ -197,11 +196,63 @@ class CommentServiceTest {
 
 
     @Test
-    void test_getCommentById_ShouldThrow(){
+    void test_getCommentById_ShouldThrow() {
         Assertions.assertThrows(ObjNotFoundException.class, () -> {
             Long notFoundId = 55L;
             this.commentServiceToTest.getPostIdByCommentId(notFoundId);
         });
+    }
+
+    @Test
+    void test_isDbInit_ShouldReturnTrue() {
+        Mockito.when(mockCommentRepository.count())
+                .thenReturn(50L);
+
+        commentServiceToTest.commentsInitialization();
+
+        Mockito
+                .verify(mockCommentRepository, Mockito.times(0))
+                .saveAllAndFlush(Mockito.any());
+    }
+
+    @Test
+    void test_isDbInit_ShouldReturnFalse() {
+        Mockito.when(mockCommentRepository.count())
+                .thenReturn(0L);
+        Mockito.when(this.mockUserService.getUserEntityByEmail("admin@adminov.bg"))
+                .thenReturn(new UserEntity());
+        Mockito.when(this.mockUserService.getUserEntityByEmail("moderator@moderatorov.bg"))
+                .thenReturn(new UserEntity());
+        Mockito.when(this.mockUserService.getUserEntityByEmail("user@userov.bg"))
+                .thenReturn(new UserEntity());
+
+
+        List<CommentEntity> expectedEntities = List.of(new CommentEntity()
+                        .setMessage("First Comment")
+                        .setCreatorName("testCreator"),
+                new CommentEntity()
+                        .setMessage("Second Comment")
+                        .setCreatorName("testCreator2")
+        );
+
+        Mockito
+                .when(mockCommentRepository.saveAllAndFlush(Mockito.any()))
+                .thenReturn(expectedEntities);
+
+        commentServiceToTest.commentsInitialization();
+        Mockito
+                .verify(mockCommentRepository, Mockito.times(1))
+                .saveAllAndFlush(Mockito.any());
+
+        List<CommentEntity> actualEntities = mockCommentRepository
+                .saveAllAndFlush(Mockito.any());
+
+        Assertions.assertEquals(expectedEntities, actualEntities);
+        for (int index = 0; index < expectedEntities.size(); index++) {
+            Assertions.assertEquals(expectedEntities.get(index), actualEntities.get(index));
+            Assertions.assertEquals(expectedEntities.get(index).getCreatorName(), actualEntities.get(index).getCreatorName());
+            Assertions.assertEquals(expectedEntities.get(index).getMessage(), actualEntities.get(index).getMessage());
+        }
     }
 
 
