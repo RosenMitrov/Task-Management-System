@@ -4,6 +4,7 @@ import app.taskmanagementsystem.domain.dto.model.PostAddDto;
 import app.taskmanagementsystem.domain.dto.view.PostDetailsViewDto;
 import app.taskmanagementsystem.domain.entity.PostEntity;
 import app.taskmanagementsystem.domain.entity.TaskEntity;
+import app.taskmanagementsystem.domain.entity.UserEntity;
 import app.taskmanagementsystem.domain.exception.ObjNotFoundException;
 import app.taskmanagementsystem.helper.TestDataHelper;
 import app.taskmanagementsystem.repositories.PostRepository;
@@ -137,7 +138,7 @@ class PostServiceTest {
 
 
     @Test
-    void test_getPostDetailsViewDtoByPostId_ShouldThrow(){
+    void test_getPostDetailsViewDtoByPostId_ShouldThrow() {
         Assertions.assertThrows(ObjNotFoundException.class, () -> {
             this.postServiceToTest.getPostDetailsViewDtoByPostId(1L);
         });
@@ -171,6 +172,78 @@ class PostServiceTest {
         Assertions.assertEquals(postEntityTest.getCreatedDate(), returnedView.getCreatedDate());
         Assertions.assertEquals(postEntityTest.getCreatorName(), returnedView.getCreatorName());
         Assertions.assertEquals(postEntityTest.getInformation(), returnedView.getInformation());
+
+    }
+
+
+    @Test
+    void test_isDbInit_ShouldReturnTrue() {
+        Mockito.when(mockPostRepository.count())
+                .thenReturn(50L);
+
+        postServiceToTest.postsInitialization();
+
+        Mockito
+                .verify(mockPostRepository, Mockito.times(0))
+                .saveAllAndFlush(Mockito.any());
+    }
+
+
+    @Test
+    void test_isDbInit_ShouldReturnFalse() {
+        Mockito.when(mockPostRepository.count())
+                .thenReturn(0L);
+
+        Mockito
+                .when(this.mockUserService.getUserEntityByEmail("admin@adminov.bg"))
+                .thenReturn(new UserEntity());
+        Mockito
+                .when(this.mockUserService.getUserEntityByEmail("moderator@moderatorov.bg"))
+                .thenReturn(new UserEntity());
+        Mockito
+                .when(this.mockUserService.getUserEntityByEmail("user@userov.bg"))
+                .thenReturn(new UserEntity());
+        postServiceToTest.postsInitialization();
+        Mockito
+                .verify(mockPostRepository, Mockito.times(1))
+                .saveAllAndFlush(Mockito.any());
+    }
+
+    @Test
+    void test_postsInitialization__ShouldPopulateDb_Successfully() {
+
+        Mockito.when(this.mockUserService.getUserEntityByEmail("admin@adminov.bg"))
+                .thenReturn(new UserEntity());
+        Mockito.when(this.mockUserService.getUserEntityByEmail("moderator@moderatorov.bg"))
+                .thenReturn(new UserEntity());
+        Mockito.when(this.mockUserService.getUserEntityByEmail("user@userov.bg"))
+                .thenReturn(new UserEntity());
+
+
+        List<PostEntity> expectedEntities = List.of(new PostEntity()
+                        .setTitle("POST 1")
+                        .setInformation("INFO 1!"),
+                new PostEntity()
+                        .setTitle("POST 2")
+                        .setInformation("INFO 2!"));
+        Mockito
+                .when(mockPostRepository.saveAllAndFlush(Mockito.any()))
+                .thenReturn(expectedEntities);
+
+        this.postServiceToTest.postsInitialization();
+
+        Mockito
+                .verify(mockPostRepository, Mockito.times(1))
+                .saveAllAndFlush(Mockito.any());
+
+        List<PostEntity> actualEntities = mockPostRepository.saveAllAndFlush(Mockito.any());
+
+        Assertions.assertEquals(expectedEntities, actualEntities);
+        for (int index = 0; index < expectedEntities.size(); index++) {
+            Assertions.assertEquals(expectedEntities.get(index), actualEntities.get(index));
+            Assertions.assertEquals(expectedEntities.get(index).getTitle(), actualEntities.get(index).getTitle());
+            Assertions.assertEquals(expectedEntities.get(index).getInformation(), actualEntities.get(index).getInformation());
+        }
 
     }
 }
