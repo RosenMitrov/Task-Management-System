@@ -10,7 +10,7 @@ import java.util.List;
 @Table(name = "comments")
 public class CommentEntity extends BaseEntity {
 
-    @Column(name = "message", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "message", nullable = false)
     private String message;
     @Column(name = "created_date", nullable = false)
     private LocalDateTime createdDate;

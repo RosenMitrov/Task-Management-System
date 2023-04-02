@@ -13,7 +13,7 @@ public class DepartmentEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "department_name", nullable = false, unique = true)
     private DepartmentTypeEnum departmentName;
-    @Column(name = "department_description", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "department_description", nullable = false)
     private String description;
     @Column(name = "count_employees", nullable = false)
     private int count;
