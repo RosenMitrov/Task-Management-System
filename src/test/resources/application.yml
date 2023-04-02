@@ -1,8 +1,14 @@
 spring:
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     defer-datasource-initialization: true
   sql:
     init:
-      mode: always
+      mode: never
+
+mail:
+  host: "localhost"
+  port: 1025
+  username: "task-management-sytem@tms-group.bg"
+  password: ""
