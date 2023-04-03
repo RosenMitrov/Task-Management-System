@@ -197,7 +197,7 @@ public class TaskServiceImpl implements TaskService, DbInit {
         UserEntity userToBeAddedToTask = this.userService.getUserEntityByEmail(email);
         taskToBeUpdated.addUserToTask(userToBeAddedToTask);
 
-        this.taskRepository.saveAndFlush(taskToBeUpdated);
+        saveTask(taskToBeUpdated);
     }
 
     @Override
