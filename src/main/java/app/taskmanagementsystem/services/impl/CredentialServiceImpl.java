@@ -33,7 +33,7 @@ public class CredentialServiceImpl implements CredentialService {
     }
 
     @Override
-    public boolean checkIfPasswordsMatch(UserChangePasswordDto userChangePasswordDto) {
+    public boolean checkIfNewPasswordsMatch(UserChangePasswordDto userChangePasswordDto) {
         return userChangePasswordDto
                 .getNewPassword()
                 .equals(userChangePasswordDto.getConfirmNewPassword());
@@ -51,5 +51,11 @@ public class CredentialServiceImpl implements CredentialService {
         userEntityByEmail.setPassword(this.passwordEncoder.encode(userChangePasswordDto.getNewPassword()));
         userEntityByEmail.setLastPasswordChangeDate(LocalDateTime.now());
         this.userService.updatePassword(userEntityByEmail);
+    }
+
+    @Override
+    public boolean checkIfOldPasswordMatchToProvidedPassword(UserChangePasswordDto userChangePasswordDto) {
+        UserEntity userEntityByEmail = this.userService.getUserEntityByEmail(userChangePasswordDto.getEmail());
+        return this.passwordEncoder.matches(userChangePasswordDto.getOldPassword(), userEntityByEmail.getPassword());
     }
 }

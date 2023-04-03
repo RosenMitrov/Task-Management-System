@@ -6,9 +6,11 @@ public interface CredentialService {
 
     boolean isCredentialsExpired(String email);
 
-    boolean checkIfPasswordsMatch(UserChangePasswordDto userChangePasswordDto);
+    boolean checkIfNewPasswordsMatch(UserChangePasswordDto userChangePasswordDto);
 
     boolean checkIfPasswordMatchToLastOne(UserChangePasswordDto userChangePasswordDto);
 
     void changePassword(UserChangePasswordDto userChangePasswordDto);
+
+    boolean checkIfOldPasswordMatchToProvidedPassword(UserChangePasswordDto userChangePasswordDto);
 }

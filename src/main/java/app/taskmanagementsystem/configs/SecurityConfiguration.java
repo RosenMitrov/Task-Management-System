@@ -26,7 +26,8 @@ public class SecurityConfiguration {
             "/error"
     };
     private static final String[] ANONYMOUS_AND_AUTHENTICATED_ENDPOINTS = {
-            "/"
+            "/",
+            "/users/change-password"
     };
     private static final String[] ANONYMOUS_ENDPOINTS = {
             "/",

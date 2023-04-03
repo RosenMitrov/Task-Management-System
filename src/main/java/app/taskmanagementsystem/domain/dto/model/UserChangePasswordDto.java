@@ -1,12 +1,18 @@
 package app.taskmanagementsystem.domain.dto.model;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 public class UserChangePasswordDto {
 
     private String fullName;
+    @NotBlank
+    @Email
     private String email;
+    @NotBlank
+    @Size(min = 2)
+    private String oldPassword;
     @NotBlank
     @Size(min = 2)
     private String newPassword;
@@ -32,6 +38,15 @@ public class UserChangePasswordDto {
 
     public UserChangePasswordDto setEmail(String email) {
         this.email = email;
+        return this;
+    }
+
+    public String getOldPassword() {
+        return oldPassword;
+    }
+
+    public UserChangePasswordDto setOldPassword(String oldPassword) {
+        this.oldPassword = oldPassword;
         return this;
     }
 

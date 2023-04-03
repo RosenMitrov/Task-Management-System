@@ -1,19 +1,17 @@
 package app.taskmanagementsystem.web;
 
 import app.taskmanagementsystem.domain.dto.model.UserChangePasswordDto;
-import app.taskmanagementsystem.security.AppUserDetails;
 import app.taskmanagementsystem.services.CredentialService;
 import app.taskmanagementsystem.utils.SessionManagementUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -28,26 +26,23 @@ public class PasswordController {
     }
 
     @GetMapping("/change-password")
-    public String changePassword(@AuthenticationPrincipal AppUserDetails appUserDetails,
-                                 Model model) {
+    public String changePassword(Model model,
+                                 HttpServletRequest httpServletRequest) throws ServletException {
+
         if (!model.containsAttribute("userChangePasswordDto")) {
-            model.addAttribute("userChangePasswordDto", new UserChangePasswordDto()
-                    .setEmail(appUserDetails.getUsername())
-                    .setFullName(appUserDetails.getFullName()));
+            model.addAttribute("userChangePasswordDto", new UserChangePasswordDto());
             model.addAttribute("passNotMatch", false);
         }
+
+        SessionManagementUtil.logoutUser(httpServletRequest);
         return "change-password";
     }
 
-    @PostMapping("/change-password")
+    @PatchMapping("/change-password")
     public String doChangePassword(@Valid UserChangePasswordDto userChangePasswordDto,
                                    BindingResult bindingResult,
                                    RedirectAttributes redirectAttributes,
-                                   @AuthenticationPrincipal AppUserDetails appUserDetails,
                                    HttpServletRequest httpServletRequest) throws ServletException {
-        userChangePasswordDto
-                .setEmail(appUserDetails.getUsername())
-                .setFullName(appUserDetails.getFullName());
 
         if (bindingResult.hasErrors()) {
             addFlashAttributesFoUserRegisterDto(userChangePasswordDto, redirectAttributes);
@@ -55,21 +50,21 @@ public class PasswordController {
             return "redirect:/users/change-password";
         }
 
-        if (!this.credentialService.checkIfPasswordsMatch(userChangePasswordDto)) {
+        if (!this.credentialService.checkIfNewPasswordsMatch(userChangePasswordDto) || !this.credentialService.checkIfOldPasswordMatchToProvidedPassword(userChangePasswordDto)) {
             addFlashAttributesFoUserRegisterDto(userChangePasswordDto, redirectAttributes);
             redirectAttributes.addFlashAttribute("passNotMatch", true);
             return "redirect:/users/change-password";
         }
 
         if (this.credentialService.checkIfPasswordMatchToLastOne(userChangePasswordDto)) {
-            addFlashAttributesFoUserRegisterDto(userChangePasswordDto.setEmail(appUserDetails.getUsername()).setFullName(appUserDetails.getFullName()), redirectAttributes);
+            addFlashAttributesFoUserRegisterDto(userChangePasswordDto.setEmail(userChangePasswordDto.getEmail()), redirectAttributes);
             redirectAttributes.addFlashAttribute("lastPassMatch", true);
             return "redirect:/users/change-password";
         }
 
         SessionManagementUtil.logoutUser(httpServletRequest);
         this.credentialService.changePassword(userChangePasswordDto);
-        return "redirect:/";
+        return "redirect:/users/login";
     }
 
 
