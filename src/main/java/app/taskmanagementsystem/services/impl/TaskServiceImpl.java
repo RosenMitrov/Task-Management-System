@@ -171,8 +171,8 @@ public class TaskServiceImpl implements TaskService, DbInit {
                                 .getClassificationByEnumType(taskAddDto.getClassification())
                 )
                 .setCreatorName(creatorUsername)
-                .setStartDate(LocalDateTime.now())
-                .setDueDate(LocalDateTime.now().plusWeeks(2));
+                .setStartDate(LocalDateTime.now());
+
         this.taskRepository.saveAndFlush(taskTobeSaved);
     }
 

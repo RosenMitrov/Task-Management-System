@@ -37,13 +37,13 @@
             </div>
 
             <div class="col mycol-config d-grid justify-content-end">
-                <label class="h4" for="startDate">Start Date</label>
+                <label class="h4" for="dueDate">Due Date</label>
                 <input
                         class=" form-control rounded-3 mycol-config my-input"
                         type="datetime-local"
-                        id="startDate"
-                        name="startDate"
-                        th:field="*{startDate}"
+                        id="dueDate"
+                        name="dueDate"
+                        th:field="*{dueDate}"
                         th:errorclass="is-invalid"
                 >
             </div>
@@ -57,8 +57,8 @@
                     </small>
                 </p>
                 <p class="mt-1 ps-2 rounded-3 error-color-input error-task">
-                    <small th:if="${#fields.hasErrors('startDate')}">
-                        Start date cannot be in the future.
+                    <small th:if="${#fields.hasErrors('dueDate')}">
+                        Due date cannot be in the past.
                     </small>
                 </p>
             </div>

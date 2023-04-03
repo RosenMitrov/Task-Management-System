@@ -1,11 +1,7 @@
 package app.taskmanagementsystem.domain.dto.model;
 
-import app.taskmanagementsystem.domain.entity.ClassificationEntity;
 import app.taskmanagementsystem.domain.entity.enums.ClassificationTypeEnum;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PastOrPresent;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
@@ -17,8 +13,8 @@ public class TaskAddDto {
     private String title;
     @NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
-    @PastOrPresent
-    private LocalDateTime startDate;
+    @FutureOrPresent
+    private LocalDateTime dueDate;
     @NotNull
     private ClassificationTypeEnum classification;
     @NotBlank
@@ -37,12 +33,12 @@ public class TaskAddDto {
         return this;
     }
 
-    public LocalDateTime getStartDate() {
-        return startDate;
+    public LocalDateTime getDueDate() {
+        return dueDate;
     }
 
-    public TaskAddDto setStartDate(LocalDateTime startDate) {
-        this.startDate = startDate;
+    public TaskAddDto setDueDate(LocalDateTime dueDate) {
+        this.dueDate = dueDate;
         return this;
     }
 
