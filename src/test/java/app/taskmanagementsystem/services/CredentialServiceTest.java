@@ -34,7 +34,7 @@ public class CredentialServiceTest {
                 .setNewPassword("topsecret")
                 .setConfirmNewPassword("topsecret");
 
-        boolean isMatch = this.credentialServiceToTest.checkIfPasswordsMatch(userChangePasswordDto);
+        boolean isMatch = this.credentialServiceToTest.checkIfNewPasswordsMatch(userChangePasswordDto);
 
         Assertions.assertTrue(isMatch);
     }
@@ -45,7 +45,7 @@ public class CredentialServiceTest {
                 .setNewPassword("topsecret")
                 .setConfirmNewPassword("notMatch");
 
-        boolean isMatch = this.credentialServiceToTest.checkIfPasswordsMatch(userChangePasswordDto);
+        boolean isMatch = this.credentialServiceToTest.checkIfNewPasswordsMatch(userChangePasswordDto);
 
         Assertions.assertFalse(isMatch);
     }
@@ -167,5 +167,58 @@ public class CredentialServiceTest {
         boolean isExpired = this.credentialServiceToTest.isCredentialsExpired(email);
 
         Assertions.assertFalse(isExpired);
+    }
+
+    @Test
+    void test_checkIfOldPasswordMatchToProvidedPassword_ShouldReturnTrue() {
+        String encodedPassword = "ENCODED_PASSWORD";
+
+        UserChangePasswordDto userChangePasswordDto = new UserChangePasswordDto()
+                .setEmail("test@testov.bg")
+                .setOldPassword(encodedPassword);
+
+        UserEntity expectedUser = new UserEntity()
+                .setPassword(encodedPassword);
+
+        Mockito
+                .when(this.mockUserService.getUserEntityByEmail(userChangePasswordDto.getEmail()))
+                .thenReturn(expectedUser);
+
+        Mockito
+                .when(this.mockPasswordEncoder.matches(userChangePasswordDto.getOldPassword(), expectedUser.getPassword()))
+                .thenReturn(userChangePasswordDto.getOldPassword().equals(expectedUser.getPassword()));
+
+        boolean isMatched = this.credentialServiceToTest.checkIfOldPasswordMatchToProvidedPassword(userChangePasswordDto);
+
+        Assertions
+                .assertTrue(isMatched);
+    }
+
+
+
+    @Test
+    void test_checkIfOldPasswordMatchToProvidedPassword_ShouldReturnFalse() {
+        String providedPassword = "ENCODED_PASSWORD";
+        String userPassword = "ENCODED_USER_PASSWORD";
+
+        UserChangePasswordDto userChangePasswordDto = new UserChangePasswordDto()
+                .setEmail("test@testov.bg")
+                .setOldPassword(providedPassword);
+
+        UserEntity expectedUser = new UserEntity()
+                .setPassword(userPassword);
+
+        Mockito
+                .when(this.mockUserService.getUserEntityByEmail(userChangePasswordDto.getEmail()))
+                .thenReturn(expectedUser);
+
+        Mockito
+                .when(this.mockPasswordEncoder.matches(userChangePasswordDto.getOldPassword(), expectedUser.getPassword()))
+                .thenReturn(userChangePasswordDto.getOldPassword().equals(expectedUser.getPassword()));
+
+        boolean isMatched = this.credentialServiceToTest.checkIfOldPasswordMatchToProvidedPassword(userChangePasswordDto);
+
+        Assertions
+                .assertFalse(isMatched);
     }
 }
