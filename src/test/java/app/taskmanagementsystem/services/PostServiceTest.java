@@ -6,7 +6,6 @@ import app.taskmanagementsystem.domain.entity.PostEntity;
 import app.taskmanagementsystem.domain.entity.TaskEntity;
 import app.taskmanagementsystem.domain.entity.UserEntity;
 import app.taskmanagementsystem.domain.exception.ObjNotFoundException;
-import app.taskmanagementsystem.helper.TestDataHelper;
 import app.taskmanagementsystem.repositories.PostRepository;
 import app.taskmanagementsystem.services.impl.PostServiceImpl;
 import org.junit.jupiter.api.Assertions;
@@ -25,8 +24,6 @@ import java.util.Optional;
 class PostServiceTest {
 
     private PostService postServiceToTest;
-
-    private TestDataHelper testDataHelper;
     @Mock
     private PostRepository mockPostRepository;
     @Mock
@@ -42,7 +39,6 @@ class PostServiceTest {
     @BeforeEach
     void setUp() {
         this.postServiceToTest = new PostServiceImpl(this.mockPostRepository, this.mockUserService, this.mockTaskService, this.mockModelMapper);
-        this.testDataHelper = new TestDataHelper();
     }
 
     @Test
@@ -54,7 +50,11 @@ class PostServiceTest {
 
     @Test
     void test_getPostEntityById_ShouldReturnItSuccessfully() {
-        PostEntity testPost = this.testDataHelper.createPostONE();
+        PostEntity testPost = new PostEntity()
+                .setTitle("Post ONE")
+                .setInformation("Post ONE information")
+                .setCreatedDate(LocalDateTime.now())
+                .setCreatorName("adminTest");
 
         Mockito.when(mockPostRepository.findById(999L))
                 .thenReturn(Optional.of(testPost));
