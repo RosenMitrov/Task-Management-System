@@ -50,7 +50,7 @@ public class CredentialServiceImpl implements CredentialService {
         UserEntity userEntityByEmail = this.userService.getUserEntityByEmail(userChangePasswordDto.getEmail());
         userEntityByEmail.setPassword(this.passwordEncoder.encode(userChangePasswordDto.getNewPassword()));
         userEntityByEmail.setLastPasswordChangeDate(LocalDateTime.now());
-        this.userService.updatePassword(userEntityByEmail);
+        this.userService.saveUserEntity(userEntityByEmail);
     }
 
     @Override

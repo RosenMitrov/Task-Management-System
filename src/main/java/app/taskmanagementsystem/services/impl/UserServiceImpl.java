@@ -209,7 +209,7 @@ public class UserServiceImpl implements UserService, DbInit {
     }
 
     @Override
-    public void updatePassword(UserEntity userEntity) {
+    public void saveUserEntity(UserEntity userEntity) {
         this.userRepository.saveAndFlush(userEntity);
     }
 

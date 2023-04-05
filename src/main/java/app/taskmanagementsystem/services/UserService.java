@@ -36,5 +36,5 @@ public interface UserService {
 
     UserDetailsViewDto getUserDetailsViewDtoByEmail(String email);
 
-    void updatePassword(UserEntity userEntityByEmail);
+    void saveUserEntity(UserEntity userEntityByEmail);
 }

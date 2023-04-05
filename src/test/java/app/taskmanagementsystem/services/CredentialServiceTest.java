@@ -133,7 +133,7 @@ public class CredentialServiceTest {
 
         Mockito
                 .verify(mockUserService, Mockito.times(1))
-                .updatePassword(userEntityToBeChangedPassword);
+                .saveUserEntity(userEntityToBeChangedPassword);
 
         Assertions.assertEquals(expectedEncodedPassword, userEntityToBeChangedPassword.getPassword());
     }
