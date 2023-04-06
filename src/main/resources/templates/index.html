@@ -15,12 +15,12 @@
     <th:block th:insert="~{/fragments/navbar}"></th:block>
 </header>
 
-<main class="position-absolute top-50 start-50 translate-middle myrow-config">
+<main class="position-absolute top-50 start-50 translate-middle myrow-config text-center">
     <h3 class="text-white">
         Hello
         <strong>
-            <th:block sec:authorize="isAnonymous()" th:text="'Anonymous!,'">Anonymous</th:block>
-            <th:block sec:authorize="isAuthenticated()" th:text="${username} +','">Test</th:block>
+            <th:block sec:authorize="isAnonymous()" th:text="'Anonymous!'">Anonymous</th:block>
+            <th:block sec:authorize="isAuthenticated()" th:text="${username} +'!'">Test</th:block>
         </strong>
         <hr>
         Welcome to Task Management System!
