@@ -19,7 +19,7 @@ public class TaskMailScheduler {
 
 
     @Scheduled(cron = "0 0 8 * * *")
-    public void sendMailAfterSuccessfulCreatingATask() throws MessagingException {
+    public void sendEmailToAllAssignedUsersIfDueDateOfTaskIsToday() throws MessagingException {
         this.taskService.sendEmail();
     }
 }
